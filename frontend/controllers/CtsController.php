@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\TblSend;
 use frontend\models\TblRepair;
 use frontend\models\TblRepairSearch;
 use yii\web\Controller;
@@ -11,6 +12,7 @@ use yii\filters\VerbFilter;
 use yii\widgets\ActiveForm;
 use yii\web\Response;
 use yii\helpers\Json;
+use yii\web\Session;
 
 class CtsController extends Controller
 {
@@ -35,11 +37,11 @@ class CtsController extends Controller
                         'verbs' => ['POST'],
                     ],
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index','view'],
                         'allow' => true,
                       ],
                     [
-                        'actions' => ['useraccept'],
+                        'actions' => ['useraccept','send'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -60,6 +62,50 @@ class CtsController extends Controller
         ]);
     }
 
+    public function actionView($id)
+    {
+        return $this->renderAjax('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }    
+
+    public function actionSend($id)
+    {
+        $model = $this->findModel($id);
+        $new_send = new TblSend;
+
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if($model->load(Yii::$app->request->post()) && $new_send->load(Yii::$app->request->post()) && $new_send->validate()) {
+
+            // tbl_repair
+            $model->BrnStatus = 'ส่งของ';
+            $model->save();
+
+            // tbl_send
+            $new_send->id = $model->id;
+            $new_send->SendStatus = 'ส่งของ';
+            $new_send->SendIP = Yii::$app->getRequest()->getUserIP();
+            $new_send->BrnCode = $model->BrnCode;
+            $new_send->SendPos = $model->BrnPos;
+            $new_send->SendRepair = $model->BrnRepair;
+            $new_send->save();
+            
+            Yii::$app->session->setFlash('success', 'ส่งของแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            //return $this->redirect(array('index'));
+
+        } else {
+            return $this->renderAjax('_form_send', [
+                'model' => $model,
+                'new_send' => $new_send,
+            ]);
+        }        
+    }
+
     public function actionUseraccept($id)
     {
         $model = $this->findModel($id);
@@ -76,8 +122,10 @@ class CtsController extends Controller
             $model->UserAcceptAt = date('Y-m-d H:i:s');
             
             $model->save();
-            Yii::$app->session->setFlash('success', 'รับเรื่องแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
-            return $this->redirect(['index']);
+            
+            Yii::$app->session->setFlash('info', 'รับเรื่องแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            //return $this->redirect(array('index'));
 
         } else {
             return $this->renderAjax('_form_user_accept', [
@@ -87,13 +135,7 @@ class CtsController extends Controller
 
     }
 
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
+/*    
     public function actionCreate()
     {
         $model = new TblRepair();
@@ -106,6 +148,7 @@ class CtsController extends Controller
             'model' => $model,
         ]);
     }
+*/
 
 /*
     public function actionUpdate($id)
@@ -121,12 +164,15 @@ class CtsController extends Controller
         ]);
     }
 */
+
+/*
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
+*/
 
     protected function findModel($id)
     {

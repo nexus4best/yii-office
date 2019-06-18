@@ -12,6 +12,14 @@ use yii\widgets\ActiveForm;
         'enableAjaxValidation' => true,
     ]); ?>
 
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6"><span class="alert-danger">เลขที่ <?= $model->id ?></span></div>
+            <div class="col-md-6" align="right"><?= $model->BrnCode.' '.$model->branch->BrnName ?></div>
+        </div>    
+    </div>
+
+
     <?= $form->field($model, 'BrnRepair')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'BrnPos')->textInput(['maxlength' => true]) ?>
@@ -21,7 +29,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'UserAccept')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <div style="text-align:right">
+            <?= Html::submitButton('บันทึก', ['class' => 'btn btn-success']) ?>
+            <a href="#" class="btn btn-default" data-dismiss="modal">ยกเลิก</a>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>

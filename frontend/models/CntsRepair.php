@@ -5,13 +5,12 @@ namespace frontend\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-use yii\web\Session;
 
 /**
  * This is the model class for table "tbl_repair".
  *
  * @property int $id
- * // Useraccept @property string $BrnStatus
+ * @property string $BrnStatus
  * @property string $BrnCode
  * @property string $BrnRepair
  * @property string $BrnPos
@@ -22,11 +21,10 @@ use yii\web\Session;
  * @property string $BrnUserCreate
  * @property string $CreatedAt
  * @property string $UpdatedAt
- * // Useraccept @property string $UserAccept
- * // Useraccept @property string $UserAcceptAt
+ * @property string $UserAccept
+ * @property string $UserAcceptAt
  */
-
-class TblRepair extends \yii\db\ActiveRecord
+class CntsRepair extends \yii\db\ActiveRecord
 {
     public function behaviors()
     {
@@ -75,61 +73,9 @@ class TblRepair extends \yii\db\ActiveRecord
         ];
     }
 
-    // sendMail
-    public function sendMail()
-    {
-        $mail_to = 'thanee@se-ed.com';
-        $mail_subject = 'รับเรื่องเรียบร้อย';
-
-        Yii::$app->mailer->compose('@app/mail/repair/accept',[
-            'fullname' => 'แจ้งซ่อม ONLINE'
-        ])
-        ->setFrom([
-            'repairing@se-ed.com' => 'แจ้งซ่อม ONLINE'
-        ])
-        ->setTo(array($mail_to))
-        ->setSubject($mail_subject)
-        ->send();
-    }
-
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        if($insert){
-            // new record
-        } else {
-            //update record
-            $this->BrnStatus = 'รับเรื่อง';
-            //$chg_status = $this->BrnStatus;
-            if($this->BrnStatus != $changedAttributes['BrnStatus']){
-                //update check field
-               //$this->sendMail();
-            }
-        }
-        
-    }
-
-    // relation db
     public function getBranch()
     {
         return $this->hasOne(Branch::className(), ['BrnCode' => 'BrnCode']);
     }
-
-    public function getSend()
-    {
-        return $this->hasOne(TblSend::className(), ['id' => 'id']);
-    }
-
-    public function getSendCreatedAt()
-    {
-        $model=$this->send;
-        return $model?$model->CreatedAt:'';
-    }
-
-    public function getSendByName()
-    {
-        $model=$this->send;
-        return $model?$model->SendByName:'';
-    }
-
+    
 }

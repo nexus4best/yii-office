@@ -6,46 +6,72 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use frontend\models\TblRepair;
 
-/**
- * TblRepairSearch represents the model behind the search form of `frontend\models\TblRepair`.
- */
 class TblRepairSearch extends TblRepair
 {
-    /**
-     * {@inheritdoc}
-     */
+    // t_branch
+    public $branchBrnName;
+    
+    // tbl_send
+    public $sendCreatedAt;
+    public $sendSendByName;
+
     public function rules()
     {
         return [
             [['id'], 'integer'],
-            [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt'], 'safe'],
+            [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 
+                'branchBrnName', 'sendCreatedAt', 'sendSendByName',
+                'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt'], 'safe'],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = TblRepair::find();
+        $query = TblRepair::find()
+                    ->where(['IN','tbl_repair.BrnStatus',['แจ้งซ่อม','รับเรื่อง','ส่งของ','เรียบร้อย','ลบ'],])
+                    ->andWhere(['NOT IN','tbl_repair.BrnPos',['ADSL','CCTV'],])
+                    ->andWhere("tbl_repair.BrnRepair<>'Laser Ricoh'");
+                    //->orderBy(['tbl_repair.id'=>SORT_DESC]);
 
-        // add conditions that should always apply here
+        $query->joinWith(['send','branch']);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => array('pageSize'=>15),
+            'sort' => ['attributes' => [
+                            'id' => [
+                                'asc' => ['id' => SORT_ASC],
+                                'desc' => ['id' => SORT_DESC],
+                                'default' => SORT_DESC
+                            ],
+                            'BrnCode' => [
+                                'asc' => ['BrnCode' => SORT_ASC],
+                                'desc' => ['BrnCode' => SORT_DESC],
+                                'default' => SORT_DESC
+                            ],
+                            'CreatedAt' => [
+                                'asc' => ['CreatedAt' => SORT_ASC],
+                                'desc' => ['CreatedAt' => SORT_DESC],
+                                'default' => SORT_DESC
+                            ],
+                            'sendCreatedAt' => [
+                                'asc' => ['tbl_send.CreatedAt' => SORT_ASC],
+                                'desc' => ['tbl_send.CreatedAt' => SORT_DESC],
+                                'default' => SORT_DESC
+                            ]
+                        ],
+                    'defaultOrder' => [
+                        'id' => SORT_DESC,
+                    ]
+
+            ],
         ]);
 
         $this->load($params);
@@ -58,22 +84,22 @@ class TblRepairSearch extends TblRepair
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'CreatedAt' => $this->CreatedAt,
-            'UpdatedAt' => $this->UpdatedAt,
-            'UserAcceptAt' => $this->UserAcceptAt,
+            //'id' => $this->id,
+            //'CreatedAt' => $this->CreatedAt,
+            //'UpdatedAt' => $this->UpdatedAt,
+            //'UserAcceptAt' => $this->UserAcceptAt,
         ]);
 
-        $query->andFilterWhere(['like', 'BrnStatus', $this->BrnStatus])
-            ->andFilterWhere(['like', 'BrnCode', $this->BrnCode])
-            ->andFilterWhere(['like', 'BrnRepair', $this->BrnRepair])
-            ->andFilterWhere(['like', 'BrnPos', $this->BrnPos])
-            ->andFilterWhere(['like', 'BrnBrand', $this->BrnBrand])
-            ->andFilterWhere(['like', 'BrnModel', $this->BrnModel])
-            ->andFilterWhere(['like', 'BrnSerial', $this->BrnSerial])
-            ->andFilterWhere(['like', 'BrnCause', $this->BrnCause])
-            ->andFilterWhere(['like', 'BrnUserCreate', $this->BrnUserCreate])
-            ->andFilterWhere(['like', 'UserAccept', $this->UserAccept]);
+        $query->andFilterWhere(['like', 'tbl_repair.id', $this->id])
+            ->andFilterWhere(['like', 'tbl_repair.BrnStatus', $this->BrnStatus])
+            ->andFilterWhere(['like', 'tbl_repair.BrnCode', $this->BrnCode])
+            ->andFilterWhere(['like', 'branch.BrnName', $this->branchBrnName])
+            ->andFilterWhere(['like', 'tbl_send.CreatedAt', $this->sendCreatedAt])
+            ->andFilterWhere(['like', 'tbl_send.SendByName', $this->sendSendByName ])
+            ->andFilterWhere(['like', 'tbl_repair.BrnRepair', $this->BrnRepair])
+            ->andFilterWhere(['like', 'tbl_repair.BrnPos', $this->BrnPos])
+            ->andFilterWhere(['like', 'tbl_repair.CreatedAt', $this->CreatedAt])
+            ->andFilterWhere(['like', 'tbl_repair.UserAccept', $this->UserAccept]);
 
         return $dataProvider;
     }

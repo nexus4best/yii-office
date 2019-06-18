@@ -10,10 +10,14 @@ return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    //'language' => 'th',
+    'language' => 'th',
     'timeZone' => 'Asia/Bangkok',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'nullDisplay' => '',
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
