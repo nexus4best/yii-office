@@ -13,6 +13,11 @@ return [
     'language' => 'th',
     'timeZone' => 'Asia/Bangkok',
     'controllerNamespace' => 'frontend\controllers',
+    'modules' => [
+        'gridview' =>  [
+                'class' => '\kartik\grid\Module'
+            ]
+    ],
     'components' => [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
@@ -41,8 +46,7 @@ return [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
-        ],
-        
+        ],     
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

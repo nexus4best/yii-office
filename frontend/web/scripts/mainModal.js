@@ -1,10 +1,23 @@
 //cts->actionView
+
 $('.userView').click(function(){
     $('#viewModal').modal('show')
     .find('#viewModalContent')
     .load($(this).attr('href'));
     return false;
-})
+});
+
+// pjax
+$(document).on('ready pjax:success', function() {
+    $('.userView').click(function(e){
+       e.preventDefault(); //for prevent default behavior of <a> tag.
+       var tagname = $(this)[0].tagName;      
+       $('#viewModal').modal('show')
+                  .find('#viewModalContent')
+                  .load($(this).attr('href'));  
+   });
+});
+
 
 //cts->actionUserAccept
 $('.userAccept').click(function(){
@@ -12,7 +25,18 @@ $('.userAccept').click(function(){
     .find('#userAcceptModalContent')
     .load($(this).attr('href'));
     return false;
-})
+});
+
+// pjax
+$(document).on('ready pjax:success', function() {
+    $('.userAccept').click(function(e){
+       e.preventDefault(); //for prevent default behavior of <a> tag.
+       var tagname = $(this)[0].tagName;      
+       $('#userAcceptModal').modal('show')
+                  .find('#userAcceptModalContent')
+                  .load($(this).attr('href'));  
+   });
+});
 
 //cts->actionSend
 $('.sendBranch').click(function(){
@@ -20,4 +44,24 @@ $('.sendBranch').click(function(){
     .find('#sendModalContent')
     .load($(this).attr('href'));
     return false;
-})
+});
+
+// pjax
+$(document).on('ready pjax:success', function() {
+    $('.sendBranch').click(function(e){
+       e.preventDefault(); //for prevent default behavior of <a> tag.
+       var tagname = $(this)[0].tagName;      
+       $('#sendModal').modal('show')
+                  .find('#sendModalContent')
+                  .load($(this).attr('href'));  
+   });
+});
+
+
+$(document).on('pjax:send', function() {
+    $('#loading').show();
+ });
+ $(document).on('pjax:complete', function() {
+   $('#loading').hide();
+ });
+ 

@@ -1,11 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-//use yii\grid\GridView;
-use kartik\grid\GridView;
+use yii\grid\GridView;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use kartik\date\DatePicker;
+use yii\widgets\Pjax;
 
 $this->title = 'Tbl Repairs';
 ?>
@@ -16,6 +16,7 @@ $this->title = 'Tbl Repairs';
             <?php Url::remember(); //echo Url::previous();?>
         </div>
     </div>
+    <?php Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -190,21 +191,10 @@ $this->title = 'Tbl Repairs';
                 ],
             ],
         ],
-        'toolbar' => '',
-        'pjax'=>true,
-        'hover'=>true,
-        'condensed'=>true,
-        'floatHeader'=>true,
-        'panel' => [
-            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-menu-hamburger"></i> ใบแจ้งซ่อม CTS</h3>',
-            'type'=>'default',
-            'before'=>false,
-            'after'=>false,
-            'showFooter'=>false
-        ],
-        //'tableOptions' => ['class'=>'table table-striped table-bordered table-hover'],
+        'tableOptions' => ['class'=>'table table-striped table-bordered table-hover'],
     ]); ?>
 
+    <?php Pjax::end(); ?>
     <!--
         <span id='loading' class='fa fa-spinner fa-pulse' style='display:none;color:red'>loading...</span>
     -->

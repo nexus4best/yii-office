@@ -44,7 +44,7 @@ class TblRepairSearch extends TblRepair
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => array('pageSize'=>15),
+            'pagination' => array('pageSize'=> 5),
             'sort' => ['attributes' => [
                             'id' => [
                                 'asc' => ['id' => SORT_ASC],

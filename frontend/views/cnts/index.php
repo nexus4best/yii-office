@@ -2,10 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
-/* @var $this yii\web\View */
-/* @var $searchModel frontend\models\CntsRepairSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+use yii\widgets\Pjax;
 
 $this->title = 'Cnts Repairs';
 $this->params['breadcrumbs'][] = $this->title;
@@ -19,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <?php Pjax::begin(['id'=>'cnts-pjax']); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -44,6 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
+    <?php Pjax::end(); ?>
 
 
 </div>
