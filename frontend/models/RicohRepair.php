@@ -46,8 +46,10 @@ class RicohRepair extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnCause', 'BrnUserCreate', 'CreatedAt', 'UpdatedAt'], 'required'],
+            [['BrnSerial'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_serial'],
+            [['RicohJob','UserAccept'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_job'],
             [['CreatedAt', 'UpdatedAt', 'UserAcceptAt'], 'safe'],
+            [['RicohJob'], 'string', 'max' => 10],
             [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept'], 'string', 'max' => 100],
             [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate'], 'string', 'max' => 255],
         ];
@@ -70,6 +72,7 @@ class RicohRepair extends \yii\db\ActiveRecord
             'UpdatedAt ' => 'UpdatedAt',
             'UserAccept' => 'ผู้รับเรื่อง',
             'UserAcceptAt' => 'User Accept At',
+            'RicohJob' => 'Job',
         ];
     }
 

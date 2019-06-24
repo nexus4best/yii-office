@@ -7,42 +7,42 @@ use yii\widgets\DetailView;
 /* @var $model frontend\models\RicohRepair */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Ricoh Repairs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Ricoh', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="ricoh-repair-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'BrnStatus',
-            'BrnCode',
-            'BrnRepair',
-            'BrnPos',
-            'BrnBrand',
-            'BrnModel',
+            [
+                'label' => 'สาขา',
+                'value' => $model->BrnCode.' '.$model->branch->BrnName,
+            ],
+            'RicohJob',
             'BrnSerial',
             'BrnCause',
             'BrnUserCreate',
-            'CreatedAt',
-            'UpdatedAt',
-            'UserAccept',
-            'UserAcceptAt',
+            [
+                'label' => 'วันที่สร้าง',
+                'value' => $model->CreatedAt,
+            ],
+            //'UpdatedAt',
+            [
+                'label' => 'วันที่เปิด job',
+                'value' => $model->UserAcceptAt,
+            ],
+            [
+                'label' => 'Job',
+                'value' => $model->RicohJob,
+            ],
+            [
+                'label' => 'ผู้รับเรื่อง',
+                'value' => $model->UserAccept,
+            ],
         ],
     ]) ?>
 

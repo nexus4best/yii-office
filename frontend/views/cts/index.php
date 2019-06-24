@@ -7,10 +7,10 @@ use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use kartik\date\DatePicker;
 
-$this->title = 'Tbl Repairs';
+$this->title = 'แจ้งซ่อม CTS';
 ?>
 
-<div class="tbl-repair-index">
+<div class="tbl-repair-index clearfix">
     <div class="form-group">
         <div class="row">
             <?php Url::remember(); //echo Url::previous();?>
@@ -68,7 +68,7 @@ $this->title = 'Tbl Repairs';
             ],
             [
                 'attribute' => 'BrnCode',
-                'headerOptions' => ['width' => '80'],
+                'headerOptions' => ['width' => '100'],
             ],
             [
                 'label' => 'ชื่อสาขา',
@@ -87,7 +87,7 @@ $this->title = 'Tbl Repairs';
                     'attribute' => 'CreatedAt',
                     'options' => [
                         'template' => '{widget}{error}',
-                        'class' => 'detaildatepicker',
+                        //'class' => 'form-control krajee-datepicker',
                         ],
                         'pluginOptions' => [
                             'todayHighlight' => true,
@@ -113,7 +113,7 @@ $this->title = 'Tbl Repairs';
                     'attribute' => 'sendCreatedAt',
                     'options' => [
                         'template' => '{widget}{error}',
-                        'class' => 'detaildatepicker',
+                        //'class' => 'form-control krajee-datepicker',
                         ],
                         'pluginOptions' => [
                             'todayHighlight' => true,

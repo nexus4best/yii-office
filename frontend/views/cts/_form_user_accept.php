@@ -25,8 +25,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'BrnPos')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'BrnCause')->textArea(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'UserAccept')->textInput(['maxlength' => true]) ?>
+    
+    <?= $form->field($model, 'UserAccept')->dropDownList(
+                            ["ราชศักดิ์" => "ราชศักดิ์","ณัฐวุฒิ" => "ณัฐวุฒิ","ชวัท" => "ชวัท","กิตติ" => "กิตติ","ธานี" => "ธานี"],
+                            ['prompt'=>'']); ?>
 
     <div class="form-group">
         <div style="text-align:right">

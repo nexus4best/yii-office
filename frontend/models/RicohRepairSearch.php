@@ -13,7 +13,7 @@ class RicohRepairSearch extends RicohRepair
         return [
             [['id'], 'integer'],
             [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 
-                'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt'], 'safe'],
+                'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt','RicohJob'], 'safe'],
         ];
     }
 
@@ -33,6 +33,7 @@ class RicohRepairSearch extends RicohRepair
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => false,
         ]);
 
         $this->load($params);
@@ -45,21 +46,19 @@ class RicohRepairSearch extends RicohRepair
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'CreatedAt' => $this->CreatedAt,
-            'UpdatedAt' => $this->UpdatedAt,
-            'UserAcceptAt' => $this->UserAcceptAt,
+            //'id' => $this->id,
+            //'CreatedAt' => $this->CreatedAt,
+            //'UpdatedAt' => $this->UpdatedAt,
+            //'UserAcceptAt' => $this->UserAcceptAt,
         ]);
 
         $query->andFilterWhere(['like', 'BrnStatus', $this->BrnStatus])
             ->andFilterWhere(['like', 'BrnCode', $this->BrnCode])
-            ->andFilterWhere(['like', 'BrnRepair', $this->BrnRepair])
-            ->andFilterWhere(['like', 'BrnPos', $this->BrnPos])
-            ->andFilterWhere(['like', 'BrnBrand', $this->BrnBrand])
-            ->andFilterWhere(['like', 'BrnModel', $this->BrnModel])
             ->andFilterWhere(['like', 'BrnSerial', $this->BrnSerial])
             ->andFilterWhere(['like', 'BrnCause', $this->BrnCause])
-            ->andFilterWhere(['like', 'BrnUserCreate', $this->BrnUserCreate])
+            ->andFilterWhere(['like', 'RicohJob', $this->RicohJob])
+            ->andFilterWhere(['like', 'CreatedAt', $this->CreatedAt])
+            ->andFilterWhere(['like', 'UserAcceptAt', $this->UserAcceptAt])
             ->andFilterWhere(['like', 'UserAccept', $this->UserAccept]);
 
         return $dataProvider;

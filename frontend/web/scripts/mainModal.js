@@ -1,3 +1,12 @@
+// ricoh
+$('.ricohUpdate').click(function(){
+    $('#ricohModal').modal('show')
+    .find('#ricohModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
+
 //cts->actionView
 
 $('.userView').click(function(){
@@ -64,4 +73,12 @@ $(document).on('pjax:send', function() {
  $(document).on('pjax:complete', function() {
    $('#loading').hide();
  });
+
+ $(document).on("pjax:success", function(){
+    $("#tblrepairsearch-createdat, #tblrepairsearch-sendcreatedat").kvDatepicker({
+        format:"yyyy-mm-dd",
+        autoclose: true,
+        //orientation: "bottom auto"
+        });
+});
  

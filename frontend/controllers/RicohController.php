@@ -8,15 +8,14 @@ use frontend\models\RicohRepairSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Session;
+use yii\widgets\ActiveForm;
+use yii\web\Response;
+use yii\helpers\Json;
 
-/**
- * RicohController implements the CRUD actions for RicohRepair model.
- */
+
 class RicohController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
@@ -26,13 +25,29 @@ class RicohController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                //'only' => ['index'],
+                'rules' => [
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'verbs' => ['POST'],
+                    ],
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                      ],
+                    [
+                        'actions' => ['sendmail','update'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
         ];
     }
 
-    /**
-     * Lists all RicohRepair models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new RicohRepairSearch();
@@ -44,12 +59,6 @@ class RicohController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single RicohRepair model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -57,51 +66,69 @@ class RicohController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new RicohRepair model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
+    public function actionSendmail()
     {
-        $model = new RicohRepair();
+        $data_email = RicohRepair::find()
+            ->where('BrnRepair = "Laser Ricoh"')
+            ->andWhere('BrnStatus = "แจ้งซ่อม"')
+            ->joinWith('branch')->all();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $session = Yii::$app->session;
+        $session->set('data_email', $data_email);
+
+        if(!empty($data_email)){
+
+            Yii::$app->mailer->compose('@app/mail/repair/ricoh',[
+                'fullname' => 'แจ้งซ่อม ONLINE'
+            ])
+            ->setFrom([
+                'repairing@se-ed.com' => 'แจ้งซ่อม ONLINE'
+            ])
+            ->setTo('thanee@se-ed.com')
+            ->setSubject('Ricoh')
+            ->send(); 
+
+            Yii::$app->db->createCommand('UPDATE tbl_repair SET BrnStatus="SendMail" WHERE BrnRepair="Laser Ricoh" AND BrnStatus="แจ้งซ่อม"')->execute();
+
+            $response = Yii::$app->session->setFlash('success', 'ส่ง Email เรียบร้อย');
+
+        } else {
+            $response = Yii::$app->session->setFlash('danger', 'ไม่มีรายการแจ้งซ่อม');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->redirect(['index'], ['response' => $response]);
     }
 
-    /**
-     * Updates an existing RicohRepair model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }        
+
+        if($model->BrnStatus == 'แจ้งซ่อม'){
+            $model->scenario = 'ricoh_serial';
+            if($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->save();
+                return $this->redirect(['index']);
+            }
+        }elseif($model->BrnStatus == 'SendMail' || $model->BrnStatus == 'ส่งของ'){
+            $model->scenario = 'ricoh_job';
+            if($model->load(Yii::$app->request->post()) && $model->validate()) {
+                $model->BrnStatus = 'ส่งของ';
+                $model->UserAcceptAt = date('Y-m-d H:i:s');
+                $model->save();
+                return $this->redirect(['index']);
+            }
         }
 
-        return $this->render('update', [
+        return $this->renderAjax('update', [
             'model' => $model,
         ]);
     }
 
-    /**
-     * Deletes an existing RicohRepair model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -109,13 +136,6 @@ class RicohController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the RicohRepair model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return RicohRepair the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = RicohRepair::findOne($id)) !== null) {

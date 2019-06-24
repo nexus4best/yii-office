@@ -35,7 +35,9 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($new_send, 'SendNumber')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($new_send, 'SendByName')->textInput(['maxlength' => true]) ?>          
+            <?= $form->field($new_send, 'SendByName')->dropDownList(
+                            ["ราชศักดิ์" => "ราชศักดิ์","ณัฐวุฒิ" => "ณัฐวุฒิ","ชวัท" => "ชวัท","กิตติ" => "กิตติ","ธานี" => "ธานี"],
+                            ['prompt'=>'']); ?>   
         </div>
     </div>
 

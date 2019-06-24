@@ -116,8 +116,6 @@ class CtsController extends Controller
         }
 
         if($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $userAccept = explode(" ", $model->UserAccept);
-            $model->UserAccept = $userAccept[0];
             $model->BrnStatus = 'รับเรื่อง';
             $model->UserAcceptAt = date('Y-m-d H:i:s');
             
