@@ -5,10 +5,10 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<div class="tbl-repair-form_user_accept">
+<div class="tbl-repair-form_user_delete">
 
     <?php $form = ActiveForm::begin([
-        'id' => 'form_user_accept',
+        'id' => 'form_user_delete',
         'enableAjaxValidation' => true,
     ]); ?>
 
@@ -22,17 +22,17 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'BrnRepair')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'BrnPos')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'BrnCause')->textArea(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'DeleteCause')->textInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'AcceptByName')->dropDownList(
-                            ["ราชศักดิ์" => "ราชศักดิ์","ณัฐวุฒิ" => "ณัฐวุฒิ","ชวัท" => "ชวัท","กิตติ" => "กิตติ","ธานี" => "ธานี"],
+    <?= $form->field($model, 'DeleteUser')->dropDownList(
+                            ["ไพบูลย์" => "ไพบูลย์","ศรันยู" => "ศรันยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"],
                             ['prompt'=>'']); ?>
 
     <div class="form-group">
         <div style="text-align:right">
-            <?= Html::submitButton('บันทึก', ['class' => 'btn btn-success']) ?>
+            <?= Html::submitButton('บันทึก', ['class' => 'btn btn-danger']) ?>
             <a href="#" class="btn btn-default" data-dismiss="modal">ยกเลิก</a>
         </div>
     </div>

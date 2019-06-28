@@ -32,7 +32,7 @@ class CtsController extends Controller
                 //'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['useraccept'],
+                        'actions' => ['useraccept','send','undelete'],
                         'allow' => true,
                         'verbs' => ['POST'],
                     ],
@@ -41,7 +41,7 @@ class CtsController extends Controller
                         'allow' => true,
                       ],
                     [
-                        'actions' => ['useraccept','send'],
+                        'actions' => ['useraccept','send','undelete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -87,11 +87,7 @@ class CtsController extends Controller
 
             // tbl_send
             $new_send->id = $model->id;
-            $new_send->SendStatus = 'ส่งของ';
             $new_send->SendIP = Yii::$app->getRequest()->getUserIP();
-            $new_send->BrnCode = $model->BrnCode;
-            $new_send->SendPos = $model->BrnPos;
-            $new_send->SendRepair = $model->BrnRepair;
             $new_send->save();
             
             Yii::$app->session->setFlash('success', 'ส่งของแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
@@ -109,6 +105,7 @@ class CtsController extends Controller
     public function actionUseraccept($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = 'accept';
 
         if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -117,7 +114,7 @@ class CtsController extends Controller
 
         if($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->BrnStatus = 'รับเรื่อง';
-            $model->UserAcceptAt = date('Y-m-d H:i:s');
+            $model->AcceptAt = date('Y-m-d H:i:s');
             
             $model->save();
             
@@ -133,44 +130,33 @@ class CtsController extends Controller
 
     }
 
-/*    
-    public function actionCreate()
-    {
-        $model = new TblRepair();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-*/
-
-/*
-    public function actionUpdate($id)
+    public function actionUndelete($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = 'undelete';
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-*/
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->BrnStatus = 'ลบ';
+            $model->DeleteIP = Yii::$app->getRequest()->getUserIP();
+            
+            $model->save();
+            
+            Yii::$app->session->setFlash('danger', 'ลบแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            //return $this->redirect(array('index'));
 
-/*
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+        } else {
+            return $this->renderAjax('_form_undelete', [
+                'model' => $model,
+            ]);
+        }
 
-        return $this->redirect(['index']);
     }
-*/
 
     protected function findModel($id)
     {

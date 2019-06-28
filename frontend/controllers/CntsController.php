@@ -3,20 +3,20 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\TblSend;
 use frontend\models\CntsRepair;
 use frontend\models\CntsRepairSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\widgets\ActiveForm;
+use yii\web\Response;
+use yii\helpers\Json;
+use yii\web\Session;
 
-/**
- * CntsController implements the CRUD actions for CntsRepair model.
- */
 class CntsController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
+
     public function behaviors()
     {
         return [
@@ -26,13 +26,30 @@ class CntsController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                //'only' => ['index'],
+                'rules' => [
+                    [
+                        'actions' => ['useraccept','send','undelete'],
+                        'allow' => true,
+                        'verbs' => ['POST'],
+                    ],
+                    [
+                        'actions' => ['index','view'],
+                        'allow' => true,
+                      ],
+                    [
+                        'actions' => ['useraccept','send','undelete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
         ];
     }
 
-    /**
-     * Lists all CntsRepair models.
-     * @return mixed
-     */
     public function actionIndex()
     {
         $searchModel = new CntsRepairSearch();
@@ -44,78 +61,106 @@ class CntsController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single CntsRepair model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
 
-    /**
-     * Creates a new CntsRepair model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new CntsRepair();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Updates an existing CntsRepair model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
+    public function actionSend($id)
     {
         $model = $this->findModel($id);
+        $new_send = new TblSend;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        if($model->load(Yii::$app->request->post()) && $new_send->load(Yii::$app->request->post()) && $new_send->validate()) {
+
+            // tbl_repair
+            $model->BrnStatus = 'ส่งของ';
+            $model->save();
+
+            // tbl_send
+            $new_send->id = $model->id;
+            $new_send->SendStatus = 'ส่งของ';
+            $new_send->SendIP = Yii::$app->getRequest()->getUserIP();
+            $new_send->BrnCode = $model->BrnCode;
+            $new_send->SendPos = $model->BrnPos;
+            $new_send->SendRepair = $model->BrnRepair;
+            $new_send->save();
+            
+            Yii::$app->session->setFlash('success', 'ส่งของแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            //return $this->redirect(array('index'));
+
+        } else {
+            return $this->renderAjax('_form_send', [
+                'model' => $model,
+                'new_send' => $new_send,
+            ]);
+        }        
     }
 
-    /**
-     * Deletes an existing CntsRepair model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
+    public function actionUseraccept($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->scenario = 'accept';
 
-        return $this->redirect(['index']);
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->BrnStatus = 'รับเรื่อง';
+            $model->UserAcceptAt = date('Y-m-d H:i:s');
+            
+            $model->save();
+            
+            Yii::$app->session->setFlash('info', 'รับเรื่องแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            //return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            return $this->redirect(array('index'));
+
+        } else {
+            return $this->renderAjax('_form_user_accept', [
+                'model' => $model,
+            ]);
+        }
+
     }
 
-    /**
-     * Finds the CntsRepair model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return CntsRepair the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionUndelete($id)
+    {
+        $model = $this->findModel($id);
+        $model->scenario = 'undelete';
+
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->BrnStatus = 'ลบ';
+            $model->DeleteIP = Yii::$app->getRequest()->getUserIP();
+            
+            $model->save();
+            
+            Yii::$app->session->setFlash('danger', 'ลบแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            //return $this->redirect(array('index'));
+
+        } else {
+            return $this->renderAjax('_form_undelete', [
+                'model' => $model,
+            ]);
+        }
+
+    }
+
     protected function findModel($id)
     {
         if (($model = CntsRepair::findOne($id)) !== null) {

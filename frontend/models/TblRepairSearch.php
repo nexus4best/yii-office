@@ -21,7 +21,7 @@ class TblRepairSearch extends TblRepair
             [['id'], 'integer'],
             [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 
                 'branchBrnName', 'sendCreatedAt', 'sendSendByName',
-                'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt'], 'safe'],
+                'BrnCreateByName', 'CreatedAt', 'UpdatedAt', 'AcceptByName', 'AcceptAt'], 'safe'],
         ];
     }
 
@@ -44,7 +44,7 @@ class TblRepairSearch extends TblRepair
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => array('pageSize'=> 5),
+            'pagination' => array('pageSize'=> 15),
             'sort' => ['attributes' => [
                             'id' => [
                                 'asc' => ['id' => SORT_ASC],
@@ -87,7 +87,7 @@ class TblRepairSearch extends TblRepair
             //'id' => $this->id,
             //'CreatedAt' => $this->CreatedAt,
             //'UpdatedAt' => $this->UpdatedAt,
-            //'UserAcceptAt' => $this->UserAcceptAt,
+            //'AcceptAt' => $this->AcceptAt,
         ]);
 
         $query->andFilterWhere(['like', 'tbl_repair.id', $this->id])
@@ -99,7 +99,7 @@ class TblRepairSearch extends TblRepair
             ->andFilterWhere(['like', 'tbl_repair.BrnRepair', $this->BrnRepair])
             ->andFilterWhere(['like', 'tbl_repair.BrnPos', $this->BrnPos])
             ->andFilterWhere(['like', 'tbl_repair.CreatedAt', $this->CreatedAt])
-            ->andFilterWhere(['like', 'tbl_repair.UserAccept', $this->UserAccept]);
+            ->andFilterWhere(['like', 'tbl_repair.AcceptByName', $this->AcceptByName]);
 
         return $dataProvider;
     }

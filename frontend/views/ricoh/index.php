@@ -128,8 +128,19 @@ $this->title = 'Ricoh';
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '',
-                'template' => '{view} {update}',
+                'template' => '{view} {update} {delete}',
                 'buttons' => [
+                    'delete' => function($url,$model){
+                        return ($model->BrnStatus <> 'ลบ' && $model->BrnStatus <> 'เรียบร้อย' && $model->BrnStatus <> 'ส่งของ') ? Html::a(
+                            '<span class="glyphicon glyphicon-trash"></span>',
+                            Yii::$app->urlManager->createUrl([
+                                'ricoh/undelete',
+                                'id' => $model->id,
+                            ]),[
+                                'title' => Yii::t('app', 'ลบ'),
+                                'class' => 'ricohDelete',
+                            ]) : '';
+                    },
                     'update' => function($url,$model){
                         return Html::a(
                             '<span class="glyphicon glyphicon-print"></span>',
@@ -156,5 +167,14 @@ $this->title = 'Ricoh';
         'header' => '<h4 class="modal-title">Ricoh</h4>',
     ]);
     echo "<div id='ricohModalContent'></div>";
+    Modal::end();
+?>
+
+<?php
+    Modal::begin([
+        'id' => 'deleteRicohModal',
+        'header' => '<h4 class="modal-title">ลบ</h4>',
+    ]);
+    echo "<div id='deleteRicohModalContent'></div>";
     Modal::end();
 ?>

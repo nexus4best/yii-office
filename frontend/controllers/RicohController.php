@@ -30,7 +30,7 @@ class RicohController extends Controller
                 //'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['update'],
+                        'actions' => ['update','undelete'],
                         'allow' => true,
                         'verbs' => ['POST'],
                     ],
@@ -39,7 +39,7 @@ class RicohController extends Controller
                         'allow' => true,
                       ],
                     [
-                        'actions' => ['sendmail','update'],
+                        'actions' => ['sendmail','update','undelete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -69,6 +69,7 @@ class RicohController extends Controller
     public function actionSendmail()
     {
         $data_email = RicohRepair::find()
+            ->joinWith('zone')
             ->where('BrnRepair = "Laser Ricoh"')
             ->andWhere('BrnStatus = "แจ้งซ่อม"')
             ->joinWith('branch')->all();
@@ -87,8 +88,10 @@ class RicohController extends Controller
             ->setTo('thanee@se-ed.com')
             ->setSubject('Ricoh')
             ->send(); 
-
-            Yii::$app->db->createCommand('UPDATE tbl_repair SET BrnStatus="SendMail" WHERE BrnRepair="Laser Ricoh" AND BrnStatus="แจ้งซ่อม"')->execute();
+            
+            /* update ricoh all status SendMail */
+            $update_date = date('Y-m-d H:i:s');
+            Yii::$app->db->createCommand("UPDATE tbl_repair SET BrnStatus='SendMail' ,UserAcceptAt='$update_date' WHERE BrnRepair='Laser Ricoh' AND BrnStatus='แจ้งซ่อม'")->execute();
 
             $response = Yii::$app->session->setFlash('success', 'ส่ง Email เรียบร้อย');
 
@@ -129,11 +132,32 @@ class RicohController extends Controller
         ]);
     }
 
-    public function actionDelete($id)
+    public function actionUndelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->scenario = 'undelete';
 
-        return $this->redirect(['index']);
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->BrnStatus = 'ลบ';
+            $model->DeleteIP = Yii::$app->getRequest()->getUserIP();
+            
+            $model->save();
+            
+            Yii::$app->session->setFlash('danger', 'ลบแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            //return $this->redirect([Yii::$app->session->get('__returnUrl')]);
+            return $this->redirect(array('index'));
+
+        } else {
+            return $this->renderAjax('_form_undelete', [
+                'model' => $model,
+            ]);
+        }
+
     }
 
     protected function findModel($id)

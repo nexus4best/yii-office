@@ -23,6 +23,7 @@ use yii\db\Expression;
  * @property string $UpdatedAt
  * @property string $UserAccept
  * @property string $UserAcceptAt
+ * @property string $RicohJob
  */
 class RicohRepair extends \yii\db\ActiveRecord
 {
@@ -48,9 +49,10 @@ class RicohRepair extends \yii\db\ActiveRecord
         return [
             [['BrnSerial'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_serial'],
             [['RicohJob','UserAccept'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_job'],
+            [['DeleteUser','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
             [['CreatedAt', 'UpdatedAt', 'UserAcceptAt'], 'safe'],
             [['RicohJob'], 'string', 'max' => 10],
-            [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept'], 'string', 'max' => 100],
+            [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept','DeleteIP','DeleteUser','DeleteCause'], 'string', 'max' => 100],
             [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate'], 'string', 'max' => 255],
         ];
     }
@@ -73,12 +75,20 @@ class RicohRepair extends \yii\db\ActiveRecord
             'UserAccept' => 'ผู้รับเรื่อง',
             'UserAcceptAt' => 'User Accept At',
             'RicohJob' => 'Job',
+            'DeleteIP' => 'DeleteIP',
+            'DeleteUser' => 'CTS',
+            'DeleteCause' => 'สาเหตุที่ลบ',
         ];
     }
 
     public function getBranch()
     {
         return $this->hasOne(Branch::className(), ['BrnCode' => 'BrnCode']);
+    }
+
+    public function getZone()
+    {
+        return $this->hasOne(TblZone::className(), ['BrnCode' => 'BrnCode']);
     }
     
 }

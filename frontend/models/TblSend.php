@@ -7,26 +7,6 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\web\Session;
 
-/**
- * This is the model class for table "tbl_send".
- *
- * @property int $id
- * @property string $BrnCode
- * @property string $SendRepair
- * @property string $SendPos
- * @property string $SendBrand
- * @property string $SendModel
- * @property string $SendSerial
- * @property string $SendByName
- * @property string $SendForm
- * @property string $SendNumber
- * @property string $SendIP
- * @property string $SendStatus
- * @property string $SendNavision
- * @property string $CreatedAt
- * @property string $UpdatedAt
- */
-
 class TblSend extends \yii\db\ActiveRecord
 {
     public function behaviors()
@@ -49,12 +29,11 @@ class TblSend extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['SendBrand', 'SendModel', 'SendSerial', 'SendByName', 'SendForm', 'SendNumber'], 'required'],
-            [['CreatedAt', 'UpdatedAt'], 'safe'],
-            [['BrnCode', 'SendPos'], 'string', 'max' => 20],
-            [['SendRepair', 'SendBrand', 'SendModel', 'SendSerial'], 'string', 'max' => 255],
-            [['SendByName', 'SendForm', 'SendNumber', 'SendNavision'], 'string', 'max' => 100],
-            [['SendIP', 'SendStatus'], 'string', 'max' => 50],
+            [['SendBrand', 'SendModel', 'SendSerial', 'SendByName', 'SendFrom', 'SendNumber'], 'required'],
+            [['CreatedAt', 'UpdatedAt','SendNavisionAt'], 'safe'],
+            [['SendBrand', 'SendModel', 'SendSerial'], 'string', 'max' => 255],
+            [['SendByName', 'SendFrom', 'SendNumber', 'SendNavision'], 'string', 'max' => 100],
+            [['SendIP'], 'string', 'max' => 50],
         ];
     }
 
@@ -62,18 +41,15 @@ class TblSend extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'BrnCode' => 'Brn Code',
-            'SendRepair' => 'Send Repair',
-            'SendPos' => 'Send Pos',
             'SendBrand' => 'ยี่ห้อ',
             'SendModel' => 'รุ่น',
             'SendSerial' => 'หมายเลข',
             'SendByName' => 'ผู้จัดส่ง',
-            'SendForm' => 'ขนส่งโดย',
+            'SendFrom' => 'ขนส่งโดย',
             'SendNumber' => 'หมายเลข',
             'SendIP' => 'Send Ip',
-            'SendStatus' => 'Send Status',
             'SendNavision' => 'Send Navision',
+            'SendNavisionAt' => 'Send Navision At',
             'CreatedAt' => 'Created At',
             'UpdatedAt' => 'Updated At',
         ];

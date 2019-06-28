@@ -46,8 +46,9 @@ class CntsRepair extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['UserAccept'], 'required'],
-            [['CreatedAt', 'UpdatedAt', 'UserAcceptAt'], 'safe'],
+            [['UserAccept'], 'required', 'message' => '', 'on' => 'accept'],
+            [['DeleteUser','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
+            [['CreatedAt', 'UpdatedAt', 'UserAcceptAt','DeleteIP','DeleteUser','DeleteCause'], 'safe'],
             [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept'], 'string', 'max' => 100],
             [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate'], 'string', 'max' => 255],
         ];
@@ -70,12 +71,34 @@ class CntsRepair extends \yii\db\ActiveRecord
             'UpdatedAt ' => 'UpdatedAt',
             'UserAccept' => 'ผู้รับเรื่อง',
             'UserAcceptAt' => 'User Accept At',
+            'DeleteIP' => 'DeleteIP',
+            'DeleteUser' => 'IT',
+            'DeleteCause' => 'สาเหตุที่ลบ',
         ];
     }
+
+    // เหลือส่งเมลล์ตอนส่งของออกให้สาขา
 
     public function getBranch()
     {
         return $this->hasOne(Branch::className(), ['BrnCode' => 'BrnCode']);
+    }
+
+    public function getSend()
+    {
+        return $this->hasOne(TblSend::className(), ['id' => 'id']);
+    }
+
+    public function getSendCreatedAt()
+    {
+        $model=$this->send;
+        return $model?$model->CreatedAt:'';
+    }
+
+    public function getSendByName()
+    {
+        $model=$this->send;
+        return $model?$model->SendByName:'';
     }
     
 }

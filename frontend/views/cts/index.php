@@ -138,13 +138,13 @@ $this->title = 'แจ้งซ่อม CTS';
             ],
             [
                 'label' => 'ผู้รับเรื่อง',
-                'attribute' => 'UserAccept',
+                'attribute' => 'AcceptByName',
                 'filter' => array("ราชศักดิ์" => "ราชศักดิ์","ณัฐวุฒิ" => "ณัฐวุฒิ","ชวัท" => "ชวัท","กิตติ" => "กิตติ","ธานี" => "ธานี"),
                 'value' => function ($model) {
-                    if(empty($model->UserAccept)){
+                    if(empty($model->AcceptByName)){
                         return '';
                     }else{
-                        return $model->UserAccept;
+                        return $model->AcceptByName;
                     }
                 },
                 'headerOptions' => ['width' => '120'],
@@ -152,8 +152,19 @@ $this->title = 'แจ้งซ่อม CTS';
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '',
-                'template' => '{view} {useraccept} {send}',
+                'template' => '{view} {useraccept} {send} {delete}',
                 'buttons' => [
+                    'delete' => function($url,$model){
+                        return ($model->BrnStatus <> 'ลบ' && $model->BrnStatus <> 'เรียบร้อย' && $model->BrnStatus <> 'ส่งของ') ? Html::a(
+                            '<span class="glyphicon glyphicon-trash"></span>',
+                            Yii::$app->urlManager->createUrl([
+                                'cts/undelete',
+                                'id' => $model->id,
+                            ]),[
+                                'title' => Yii::t('app', 'ลบ'),
+                                'class' => 'userDelete',
+                            ]) : '';
+                    },
                     'view' => function($url,$model){
                         return Html::a(
                             '<span class="glyphicon glyphicon-search"></span>',
@@ -235,5 +246,14 @@ $this->title = 'แจ้งซ่อม CTS';
         'header' => '<h4 class="modal-title">ส่งของ</h4>',
     ]);
     echo "<div id='sendModalContent'></div>";
+    Modal::end();
+?>
+
+<?php
+    Modal::begin([
+        'id' => 'deleteModal',
+        'header' => '<h4 class="modal-title">ลบ</h4>',
+    ]);
+    echo "<div id='deleteModalContent'></div>";
     Modal::end();
 ?>

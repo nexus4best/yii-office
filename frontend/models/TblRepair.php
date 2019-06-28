@@ -11,7 +11,7 @@ use yii\web\Session;
  * This is the model class for table "tbl_repair".
  *
  * @property int $id
- * // Useraccept @property string $BrnStatus
+ * // AcceptByName @property string $BrnStatus
  * @property string $BrnCode
  * @property string $BrnRepair
  * @property string $BrnPos
@@ -19,11 +19,11 @@ use yii\web\Session;
  * @property string $BrnModel
  * @property string $BrnSerial
  * @property string $BrnCause
- * @property string $BrnUserCreate
+ * @property string $BrnCreateByName
  * @property string $CreatedAt
  * @property string $UpdatedAt
- * // Useraccept @property string $UserAccept
- * // Useraccept @property string $UserAcceptAt
+ * // AcceptByName @property string $AcceptByName
+ * // AcceptByName @property string $AcceptAt
  */
 
 class TblRepair extends \yii\db\ActiveRecord
@@ -48,10 +48,11 @@ class TblRepair extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['UserAccept'], 'required'],
-            [['CreatedAt', 'UpdatedAt', 'UserAcceptAt'], 'safe'],
-            [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept'], 'string', 'max' => 100],
-            [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate'], 'string', 'max' => 255],
+            [['AcceptByName'], 'required', 'message' => '', 'on' => 'accept'],
+            [['DeleteByName','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
+            [['CreatedAt', 'UpdatedAt', 'AcceptAt'], 'safe'],
+            [['BrnStatus', 'BrnCode', 'BrnPos', 'AcceptByName','DeleteIP','DeleteByName','DeleteCause'], 'string', 'max' => 100],
+            [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnCreateByName'], 'string', 'max' => 255],
         ];
     }
 
@@ -67,11 +68,14 @@ class TblRepair extends \yii\db\ActiveRecord
             'BrnModel' => 'รุ่น',
             'BrnSerial' => 'หมายเลข',
             'BrnCause' => 'สาเหตุ',
-            'BrnUserCreate' => 'ผู้จัดทำ',
+            'BrnCreateByName' => 'ผู้จัดทำ',
+            'AcceptByName' => 'ผู้รับเรื่อง',
+            'AcceptAt' => 'User Accept At',
+            'DeleteIP' => 'DeleteIP',
+            'DeleteByName' => 'CTS',
+            'DeleteCause' => 'สาเหตุที่ลบ',
             'CreatedAt ' => 'วันที่สร้าง',
             'UpdatedAt ' => 'UpdatedAt',
-            'UserAccept' => 'ผู้รับเรื่อง',
-            'UserAcceptAt' => 'User Accept At',
         ];
     }
 
@@ -79,7 +83,7 @@ class TblRepair extends \yii\db\ActiveRecord
     public function sendMail()
     {
         $mail_to = 'thanee@se-ed.com';
-        $mail_subject = 'รับเรื่องเรียบร้อย';
+        $mail_subject = 'ส่งของเรียบร้อย';
 
         Yii::$app->mailer->compose('@app/mail/repair/accept',[
             'fullname' => 'แจ้งซ่อม ONLINE'
@@ -99,7 +103,7 @@ class TblRepair extends \yii\db\ActiveRecord
             // new record
         } else {
             //update record
-            $this->BrnStatus = 'รับเรื่อง';
+            $this->BrnStatus = 'ส่งของ';
             //$chg_status = $this->BrnStatus;
             if($this->BrnStatus != $changedAttributes['BrnStatus']){
                 //update check field
@@ -120,6 +124,12 @@ class TblRepair extends \yii\db\ActiveRecord
         return $this->hasOne(TblSend::className(), ['id' => 'id']);
     }
 
+    public function getComment()
+    {
+        return $this->hasOne(TblComment::className(), ['id' => 'id']);
+    }
+
+    // get Data from Reletion
     public function getSendCreatedAt()
     {
         $model=$this->send;

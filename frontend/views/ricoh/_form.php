@@ -35,7 +35,10 @@ use yii\widgets\ActiveForm;
                             <?= $form->field($model, 'BrnSerial')->textInput(['maxlength' => true]) ?>
 
                             <div class="form-group">
-                                <?= Html::submitButton('บันทึก', ['class' => 'btn btn-success']) ?>
+                                <div style="text-align:right">
+                                    <?= Html::submitButton('บันทึก', ['class' => 'btn btn-success']) ?>
+                                    <a href="#" class="btn btn-default" data-dismiss="modal">ยกเลิก</a>
+                                </div>
                             </div>
 
                         <?php ActiveForm::end(); ?>
@@ -79,7 +82,10 @@ use yii\widgets\ActiveForm;
                             ['prompt'=>'']); ?>
 
                     <div class="form-group">
-                        <?= Html::submitButton('บันทึก', ['class' => 'btn btn-success']) ?>
+                            <div style="text-align:right">
+                                <?= Html::submitButton('บันทึก', ['class' => 'btn btn-success']) ?>
+                                <a href="#" class="btn btn-default" data-dismiss="modal">ยกเลิก</a>
+                            </div>
                     </div>
 
                     <?php ActiveForm::end(); ?>

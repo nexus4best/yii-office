@@ -1,4 +1,4 @@
-// ricoh
+// ricoh update
 $('.ricohUpdate').click(function(){
     $('#ricohModal').modal('show')
     .find('#ricohModalContent')
@@ -6,6 +6,33 @@ $('.ricohUpdate').click(function(){
     return false;
 });
 
+// ricoh delete
+$('.ricohDelete').click(function(){
+    $('#deleteRicohModal').modal('show')
+    .find('#deleteRicohModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
+//cts->actionUndelete
+
+$('.userDelete').click(function(){
+    $('#deleteModal').modal('show')
+    .find('#deleteModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
+// pjax
+$(document).on('ready pjax:success', function() {
+    $('.userDelete').click(function(e){
+       e.preventDefault(); //for prevent default behavior of <a> tag.
+       var tagname = $(this)[0].tagName;      
+       $('#deleteModal').modal('show')
+                  .find('#deleteModalContent')
+                  .load($(this).attr('href'));  
+   });
+});
 
 //cts->actionView
 
