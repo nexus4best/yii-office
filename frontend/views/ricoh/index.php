@@ -45,19 +45,19 @@ $this->title = 'Ricoh';
                     }
                     return $brn_status;
                 },
-                'headerOptions' => ['width' => '120'],
+                //'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'id',
-                'headerOptions' => ['width' => '120'],
+                //'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'BrnSerial',
-                'headerOptions' => ['width' => '120'],
+                //'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'BrnCode',
-                'headerOptions' => ['width' => '120'],
+                //'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'วันที่แจ้งซ่อม',
@@ -79,22 +79,20 @@ $this->title = 'Ricoh';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                'headerOptions' => ['width' => '120'],
+                //'headerOptions' => ['width' => '150'],
             ],
             [
-                'label' => 'วันที่เปิด Job',
-                'attribute' => 'UserAcceptAt',
+                'label' => 'วันที่รับเรื่อง',
+                'attribute' => 'OpenJobAt',
                 'value' => function ($model) {
-                    if($model->UserAcceptAt==''){
-                        return '';
-                    }else{
-                        return substr($model->UserAcceptAt,8,2).'/'.substr($model->UserAcceptAt,5,2).'/'.substr($model->UserAcceptAt,2,2).' '.substr($model->UserAcceptAt,11,5);
-                    }                    
+                    if(!empty($model->ricoh->UpdatedAt)){
+                        return substr($model->ricoh->UpdatedAt,8,2).'/'.substr($model->ricoh->UpdatedAt,5,2).'/'.substr($model->ricoh->UpdatedAt,2,2).' '.substr($model->ricoh->UpdatedAt,11,5);
+                    }
                 },
                 'filter' => DatePicker::widget([
                     'type' => DatePicker::TYPE_INPUT,
                     'model' => $searchModel,
-                    'attribute' => 'UserAcceptAt',
+                    'attribute' => 'OpenJobAt',
                     'options' => [
                         'template' => '{widget}{error}',
                         //'class' => 'form-control krajee-datepicker',
@@ -105,31 +103,34 @@ $this->title = 'Ricoh';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                'headerOptions' => ['width' => '120'],
+                //'headerOptions' => ['width' => '150'],
             ],
             [
-                'attribute' => 'RicohJob',
-                'headerOptions' => ['width' => '120'],
+                'label' => 'job',
+                'attribute' => 'OpenJob',
+                'value' => 'ricoh.OpenJob',
+                //'headerOptions' => ['width' => '120'],
             ],
             [
-                'label' => 'ผู้รับเรื่อง',
-                'attribute' => 'UserAccept',
-                'filter' => array("ราชศักดิ์" => "ราชศักดิ์","ณัฐวุฒิ" => "ณัฐวุฒิ","ชวัท" => "ชวัท","กิตติ" => "กิตติ","ธานี" => "ธานี"),
-                'value' => function ($model) {
-                    if(empty($model->UserAccept)){
-                        return '';
-                    }else{
-                        return $model->UserAccept;
-                    }
-                },
-                'headerOptions' => ['width' => '120'],
+                'attribute' => 'BrnCause',
+                //'headerOptions' => ['width' => '150'],
             ],
-            'BrnCause',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '',
-                'template' => '{view} {update} {delete}',
+                'template' => '{view} {update} {delete} {openjob}',
                 'buttons' => [
+                    'view' => function($url,$model){
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-search"></span>',
+                            Yii::$app->urlManager->createUrl([
+                                'ricoh/view',
+                                'id' => $model->id,
+                            ]),[
+                                'title' => Yii::t('app', 'แสดง'),
+                                'class' => 'RicohView',
+                            ]);
+                    },
                     'delete' => function($url,$model){
                         return ($model->BrnStatus <> 'ลบ' && $model->BrnStatus <> 'เรียบร้อย' && $model->BrnStatus <> 'ส่งของ') ? Html::a(
                             '<span class="glyphicon glyphicon-trash"></span>',
@@ -141,16 +142,27 @@ $this->title = 'Ricoh';
                                 'class' => 'ricohDelete',
                             ]) : '';
                     },
-                    'update' => function($url,$model){
-                        return Html::a(
+                    'openjob' => function($url,$model){
+                        return ($model->BrnStatus=='SendMail') ? Html::a(
                             '<span class="glyphicon glyphicon-print"></span>',
+                            Yii::$app->urlManager->createUrl([
+                                'ricoh/openjob',
+                                'id' => $model->id,
+                            ]),[
+                                'title' => Yii::t('app', 'เปิด job'),
+                                'class' => 'ricohOpenjob',
+                            ]) : '';
+                    },
+                    'update' => function($url,$model){
+                        return ($model->BrnStatus == 'แจ้งซ่อม') ? Html::a(
+                            '<span class="glyphicon glyphicon-pencil"></span>',
                             Yii::$app->urlManager->createUrl([
                                 'ricoh/update',
                                 'id' => $model->id,
                             ]),[
-                                'title' => Yii::t('app', 'อัพเดท'),
+                                'title' => Yii::t('app', 'แก้ไข'),
                                 'class' => 'ricohUpdate',
-                            ]);
+                            ]) : '';
                     },
                 ],
             ],
@@ -163,10 +175,28 @@ $this->title = 'Ricoh';
 
 <?php
     Modal::begin([
+        'id' => 'ricohViewModal',
+        'header' => '<h4 class="modal-title">แสดง</h4>',
+    ]);
+    echo "<div id='ricohViewModalContent'></div>";
+    Modal::end();
+?>
+
+<?php
+    Modal::begin([
         'id' => 'ricohModal',
         'header' => '<h4 class="modal-title">Ricoh</h4>',
     ]);
     echo "<div id='ricohModalContent'></div>";
+    Modal::end();
+?>
+
+<?php
+    Modal::begin([
+        'id' => 'ricohModalOpenjob',
+        'header' => '<h4 class="modal-title">Ricoh</h4>',
+    ]);
+    echo "<div id='ricohModalContentOpenJob'></div>";
     Modal::end();
 ?>
 

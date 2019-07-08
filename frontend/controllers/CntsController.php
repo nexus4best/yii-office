@@ -86,11 +86,7 @@ class CntsController extends Controller
 
             // tbl_send
             $new_send->id = $model->id;
-            $new_send->SendStatus = 'ส่งของ';
             $new_send->SendIP = Yii::$app->getRequest()->getUserIP();
-            $new_send->BrnCode = $model->BrnCode;
-            $new_send->SendPos = $model->BrnPos;
-            $new_send->SendRepair = $model->BrnRepair;
             $new_send->save();
             
             Yii::$app->session->setFlash('success', 'ส่งของแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
@@ -117,7 +113,7 @@ class CntsController extends Controller
 
         if($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->BrnStatus = 'รับเรื่อง';
-            $model->UserAcceptAt = date('Y-m-d H:i:s');
+            $model->AcceptAt = date('Y-m-d H:i:s');
             
             $model->save();
             

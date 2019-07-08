@@ -8,12 +8,17 @@ use frontend\models\RicohRepair;
 
 class RicohRepairSearch extends RicohRepair
 {
+    // tbl_ricoh
+    public $OpenJob;
+    //public $OpenJobByName;
+    public $OpenJobAt;
+
     public function rules()
     {
         return [
             [['id'], 'integer'],
             [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 
-                'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt','RicohJob'], 'safe'],
+                'OpenJob', 'OpenJobAt', 'BrnUserCreate', 'CreatedAt', 'UpdatedAt'], 'safe'],
         ];
     }
 
@@ -30,6 +35,9 @@ class RicohRepairSearch extends RicohRepair
                 //->andWhere(['NOT IN','tbl_repair.BrnPos',['ADSL','CCTV'],])
                 ->andWhere("tbl_repair.BrnRepair='Laser Ricoh'")
                 ->orderBy(['tbl_repair.id'=>SORT_DESC]);
+
+        $query->joinWith(['ricoh']);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,14 +60,14 @@ class RicohRepairSearch extends RicohRepair
             //'UserAcceptAt' => $this->UserAcceptAt,
         ]);
 
-        $query->andFilterWhere(['like', 'BrnStatus', $this->BrnStatus])
-            ->andFilterWhere(['like', 'BrnCode', $this->BrnCode])
-            ->andFilterWhere(['like', 'BrnSerial', $this->BrnSerial])
-            ->andFilterWhere(['like', 'BrnCause', $this->BrnCause])
-            ->andFilterWhere(['like', 'RicohJob', $this->RicohJob])
-            ->andFilterWhere(['like', 'CreatedAt', $this->CreatedAt])
-            ->andFilterWhere(['like', 'UserAcceptAt', $this->UserAcceptAt])
-            ->andFilterWhere(['like', 'UserAccept', $this->UserAccept]);
+        $query->andFilterWhere(['like', 'tbl_repair.BrnStatus', $this->BrnStatus])
+            ->andFilterWhere(['like', 'tbl_repair.id', $this->id])
+            ->andFilterWhere(['like', 'tbl_repair.BrnCode', $this->BrnCode])
+            ->andFilterWhere(['like', 'tbl_repair.BrnSerial', $this->BrnSerial])
+            ->andFilterWhere(['like', 'tbl_repair.BrnCause', $this->BrnCause])
+            ->andFilterWhere(['like', 'tbl_ricoh.OpenJob', $this->OpenJob])
+            ->andFilterWhere(['like', 'tbl_ricoh.UpdatedAt', $this->OpenJobAt])
+            ->andFilterWhere(['like', 'tbl_repair.CreatedAt', $this->CreatedAt]);
 
         return $dataProvider;
     }

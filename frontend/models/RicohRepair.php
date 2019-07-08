@@ -47,13 +47,11 @@ class RicohRepair extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['BrnSerial'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_serial'],
-            [['RicohJob','UserAccept'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_job'],
-            [['DeleteUser','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
-            [['CreatedAt', 'UpdatedAt', 'UserAcceptAt'], 'safe'],
-            [['RicohJob'], 'string', 'max' => 10],
-            [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept','DeleteIP','DeleteUser','DeleteCause'], 'string', 'max' => 100],
-            [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate'], 'string', 'max' => 255],
+            [['BrnSerial','BrnCause'],'required', 'message' => 'โปรดระบุ{attribute}', 'on' => 'ricoh_serial'],
+            [['DeleteByName','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
+            [['CreatedAt', 'UpdatedAt'], 'safe'],
+            [['BrnStatus', 'BrnCode', 'BrnPos', 'DeleteIP','DeleteByName','DeleteCause'], 'string', 'max' => 100],
+            [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnCreateByName'], 'string', 'max' => 255],
         ];
     }
 
@@ -69,14 +67,11 @@ class RicohRepair extends \yii\db\ActiveRecord
             'BrnModel' => 'รุ่น',
             'BrnSerial' => 'หมายเลข',
             'BrnCause' => 'สาเหตุ',
-            'BrnUserCreate' => 'ผู้จัดทำ',
-            'CreatedAt ' => 'วันที่สร้าง',
-            'UpdatedAt ' => 'UpdatedAt',
-            'UserAccept' => 'ผู้รับเรื่อง',
-            'UserAcceptAt' => 'User Accept At',
-            'RicohJob' => 'Job',
+            'BrnCreateByName' => 'ผู้จัดทำ',
+            'CreatedAt' => 'วันที่สร้าง',
+            'UpdatedAt' => 'UpdatedAt',
             'DeleteIP' => 'DeleteIP',
-            'DeleteUser' => 'CTS',
+            'DeleteByName' => 'CTS',
             'DeleteCause' => 'สาเหตุที่ลบ',
         ];
     }
@@ -86,9 +81,20 @@ class RicohRepair extends \yii\db\ActiveRecord
         return $this->hasOne(Branch::className(), ['BrnCode' => 'BrnCode']);
     }
 
+    public function getRicoh()
+    {
+        return $this->hasOne(TblRicoh::className(), ['id' => 'id']);
+    }
+
+    public function getComment()
+    {
+        return $this->hasOne(TblComment::className(), ['id' => 'id']);
+    }
+    
+/*
     public function getZone()
     {
         return $this->hasOne(TblZone::className(), ['BrnCode' => 'BrnCode']);
     }
-    
+*/
 }

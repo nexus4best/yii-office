@@ -39,7 +39,9 @@ AppAsset::register($this);
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'แผนก CTS', 'url' => ['/cts/index']],
         ['label' => 'Ricoh', 'url' => ['/ricoh/index']],
-        ['label' => 'แผนก It', 'url' => ['/cnts/index']],
+        ['label' => 'แผนก IT', 'url' => ['/cnts/index']],
+        ['label' => 'รับของจากคลังสินค้า', 'url' => ['/recive/index']],
+        ['label' => 'ตรวจซ่อมจากช่าง', 'url' => ['/recheck/index']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];

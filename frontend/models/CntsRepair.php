@@ -46,11 +46,11 @@ class CntsRepair extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['UserAccept'], 'required', 'message' => '', 'on' => 'accept'],
-            [['DeleteUser','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
-            [['CreatedAt', 'UpdatedAt', 'UserAcceptAt','DeleteIP','DeleteUser','DeleteCause'], 'safe'],
-            [['BrnStatus', 'BrnCode', 'BrnPos', 'UserAccept'], 'string', 'max' => 100],
-            [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnUserCreate'], 'string', 'max' => 255],
+            [['AcceptByName'], 'required', 'message' => '', 'on' => 'accept'],
+            [['DeleteByName','DeleteCause'], 'required', 'message' => '', 'on' => 'undelete'],
+            [['CreatedAt', 'UpdatedAt', 'AcceptAt'], 'safe'],
+            [['BrnStatus', 'BrnCode', 'BrnPos', 'AcceptByName','DeleteIP','DeleteByName','DeleteCause'], 'string', 'max' => 100],
+            [['BrnRepair', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 'BrnCreateByName'], 'string', 'max' => 255],
         ];
     }
 
@@ -66,19 +66,52 @@ class CntsRepair extends \yii\db\ActiveRecord
             'BrnModel' => 'รุ่น',
             'BrnSerial' => 'หมายเลข',
             'BrnCause' => 'สาเหตุ',
-            'BrnUserCreate' => 'ผู้จัดทำ',
+            'BrnCreateByName' => 'ผู้จัดทำ',
+            'AcceptByName' => 'ผู้รับเรื่อง',
+            'AcceptAt' => 'User Accept At',
+            'DeleteIP' => 'DeleteIP',
+            'DeleteByName' => 'IT',
+            'DeleteCause' => 'สาเหตุที่ลบ',
             'CreatedAt ' => 'วันที่สร้าง',
             'UpdatedAt ' => 'UpdatedAt',
-            'UserAccept' => 'ผู้รับเรื่อง',
-            'UserAcceptAt' => 'User Accept At',
-            'DeleteIP' => 'DeleteIP',
-            'DeleteUser' => 'IT',
-            'DeleteCause' => 'สาเหตุที่ลบ',
         ];
     }
 
-    // เหลือส่งเมลล์ตอนส่งของออกให้สาขา
+    // sendMail
+    public function sendMail()
+    {
+        $mail_to = 'thanee@se-ed.com';
+        $mail_subject = 'ส่งของเรียบร้อย';
 
+        Yii::$app->mailer->compose('@app/mail/repair/accept',[
+            'fullname' => 'แจ้งซ่อม ONLINE'
+        ])
+        ->setFrom([
+            'repairing@se-ed.com' => 'แจ้งซ่อม ONLINE'
+        ])
+        ->setTo(array($mail_to))
+        ->setSubject($mail_subject)
+        ->send();
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        if($insert){
+            // new record
+        } else {
+            //update record
+            $this->BrnStatus = 'ส่งของ';
+            //$chg_status = $this->BrnStatus;
+            if($this->BrnStatus != $changedAttributes['BrnStatus']){
+                //update check field
+               //$this->sendMail();
+            }
+        }
+        
+    }
+
+    // relation db
     public function getBranch()
     {
         return $this->hasOne(Branch::className(), ['BrnCode' => 'BrnCode']);
@@ -89,6 +122,12 @@ class CntsRepair extends \yii\db\ActiveRecord
         return $this->hasOne(TblSend::className(), ['id' => 'id']);
     }
 
+    public function getComment()
+    {
+        return $this->hasOne(TblComment::className(), ['id' => 'id']);
+    }
+
+    // get Data from Reletion
     public function getSendCreatedAt()
     {
         $model=$this->send;

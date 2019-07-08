@@ -32,14 +32,14 @@ use yii\widgets\ActiveForm;
         </div>
         <div class="col-md-6">
         
-        <?= $form->field($new_send, 'SendForm')->dropDownList(
+        <?= $form->field($new_send, 'SendFrom')->dropDownList(
                             ["Global line" => "Global line","DHL" => "DHL","TNT" => "TNT","เดินทางไปเอง" => "เดินทางไปเอง"],
                             ['prompt'=>'']); ?>  
 
             <?= $form->field($new_send, 'SendNumber')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($new_send, 'SendByName')->dropDownList(
-                            ["ไพบูลย์" => "ไพบูลย์","ศรันยู" => "ศรันยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"],
+                            ["ไพบูลย์" => "ไพบูลย์","ศรัณยู" => "ศรัณยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"],
                             ['prompt'=>'']); ?>   
         </div>
     </div>

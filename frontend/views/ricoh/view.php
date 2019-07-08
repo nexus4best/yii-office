@@ -13,6 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="ricoh-repair-view">
 
+<?php if($model->BrnStatus=='แจ้งซ่อม'){ ?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -22,28 +23,138 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'สาขา',
                 'value' => $model->BrnCode.' '.$model->branch->BrnName,
             ],
-            'RicohJob',
             'BrnSerial',
             'BrnCause',
-            'BrnUserCreate',
+            'BrnCreateByName',
             [
                 'label' => 'วันที่สร้าง',
                 'value' => $model->CreatedAt,
             ],
-            //'UpdatedAt',
+        ],
+    ]) ?>
+<?php }elseif($model->BrnStatus=='SendMail'){ ?>
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'BrnStatus',
             [
-                'label' => 'วันที่เปิด job',
-                'value' => $model->UserAcceptAt,
+                'label' => 'สาขา',
+                'value' => $model->BrnCode.' '.$model->branch->BrnName,
+            ],
+            'BrnSerial',
+            'BrnCause',
+            'BrnCreateByName',
+            [
+                'label' => 'วันที่สร้าง',
+                'value' => $model->CreatedAt,
             ],
             [
-                'label' => 'Job',
-                'value' => $model->RicohJob,
-            ],
-            [
-                'label' => 'ผู้รับเรื่อง',
-                'value' => $model->UserAccept,
+                'label' => 'วันที่รับเรื่อง SendMail',
+                'value' => $model->UpdatedAt,
             ],
         ],
     ]) ?>
+<?php }elseif($model->BrnStatus=='ส่งของ'){ ?>
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'BrnStatus',
+            [
+                'label' => 'สาขา',
+                'value' => $model->BrnCode.' '.$model->branch->BrnName,
+            ],
+            'BrnSerial',
+            'BrnCause',
+            'BrnCreateByName',
+            [
+                'label' => 'วันที่สร้าง',
+                'value' => $model->CreatedAt,
+            ],
+            [
+                'label' => 'วันที่รับเรื่อง',
+                'value' => $model->ricoh->UpdatedAt,
+            ],
+            [
+                'label' => 'ผู้รับเรื่อง',
+                'value' => $model->ricoh->OpenJobByName,
+            ],
+            [
+                'label' => 'Job',
+                'value' => $model->ricoh->OpenJob,
+            ],
+        ],
+    ]) ?>
+<?php }elseif($model->BrnStatus=='เรียบร้อย'){ ?>
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'BrnStatus',
+            [
+                'label' => 'สาขา',
+                'value' => $model->BrnCode.' '.$model->branch->BrnName,
+            ],
+            'BrnSerial',
+            'BrnCause',
+            'BrnCreateByName',
+            [
+                'label' => 'วันที่สร้าง',
+                'value' => $model->CreatedAt,
+            ],
+            [
+                'label' => 'วันที่รับเรื่อง',
+                'value' => $model->ricoh->UpdatedAt,
+            ],
+            [
+                'label' => 'ผู้รับเรื่อง',
+                'value' => $model->ricoh->OpenJobByName,
+            ],
+            [
+                'label' => 'Job',
+                'value' => $model->ricoh->OpenJob,
+            ],
+            [
+                'label' => 'ข้อเสนอแนะ',
+                'value' => $model->comment->Message,
+            ],
+            [
+                'label' => 'ผู้เสนอแนะ',
+                'value' => $model->comment->MessageByName,
+            ],
+            [
+                'label' => 'วันที่เสนอแนะ',
+                'value' => $model->comment->CreatedAt,
+            ],
+        ],
+    ]) ?>
+<?php }elseif($model->BrnStatus=='ลบ'){ ?>
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'id',
+            'BrnStatus',
+            [
+                'label' => 'สาขา',
+                'value' => $model->BrnCode.' '.$model->branch->BrnName,
+            ],
+            'BrnSerial',
+            'BrnCause',
+            'BrnCreateByName',
+            [
+                'label' => 'วันที่สร้าง',
+                'value' => $model->CreatedAt,
+            ],
+            [
+                'label' => 'วันที่ลบ',
+                'value' => $model->UpdatedAt,
+            ],
+            'DeleteCause',
+            'DeleteByName',
+
+        ],
+    ]) ?>
+<?php } ?>
 
 </div>

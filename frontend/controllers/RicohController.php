@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\TblRicoh;
 use frontend\models\RicohRepair;
 use frontend\models\RicohRepairSearch;
 use yii\web\Controller;
@@ -30,7 +31,7 @@ class RicohController extends Controller
                 //'only' => ['index'],
                 'rules' => [
                     [
-                        'actions' => ['update','undelete'],
+                        'actions' => ['update','undelete','openjob'],
                         'allow' => true,
                         'verbs' => ['POST'],
                     ],
@@ -39,7 +40,7 @@ class RicohController extends Controller
                         'allow' => true,
                       ],
                     [
-                        'actions' => ['sendmail','update','undelete'],
+                        'actions' => ['sendmail','update','undelete','openjob'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -61,7 +62,7 @@ class RicohController extends Controller
 
     public function actionView($id)
     {
-        return $this->render('view', [
+        return $this->renderAjax('view', [
             'model' => $this->findModel($id),
         ]);
     }
@@ -91,7 +92,7 @@ class RicohController extends Controller
             
             /* update ricoh all status SendMail */
             $update_date = date('Y-m-d H:i:s');
-            Yii::$app->db->createCommand("UPDATE tbl_repair SET BrnStatus='SendMail' ,UserAcceptAt='$update_date' WHERE BrnRepair='Laser Ricoh' AND BrnStatus='แจ้งซ่อม'")->execute();
+            Yii::$app->db->createCommand("UPDATE tbl_repair SET BrnStatus='SendMail' , AcceptAt ='$update_date' WHERE BrnRepair='Laser Ricoh' AND BrnStatus='แจ้งซ่อม'")->execute();
 
             $response = Yii::$app->session->setFlash('success', 'ส่ง Email เรียบร้อย');
 
@@ -102,34 +103,53 @@ class RicohController extends Controller
         return $this->redirect(['index'], ['response' => $response]);
     }
 
+    public function actionOpenjob($id)
+    {
+        $model = $this->findModel($id);
+        $new_ricoh = new TblRicoh;
+
+        if(Yii::$app->request->isAjax && $new_ricoh->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($new_ricoh);
+        }   
+        
+        if($new_ricoh->load(Yii::$app->request->post()) && $new_ricoh->validate()) {
+
+            $model->BrnStatus = 'ส่งของ';
+            $model->save();
+
+            $new_ricoh->id = $model->id;
+            $new_ricoh->save();
+
+            return $this->redirect(['index']);
+        }else{
+            return $this->renderAjax('openjob', [
+                'model' => $model,
+                'new_ricoh' => $new_ricoh,
+            ]);
+        }    
+
+    }
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = 'ricoh_serial';
 
         if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
-        }        
+        }   
+        
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
+            return $this->redirect(['index']);
+        }else{
+            return $this->renderAjax('update', [
+                'model' => $model,
+            ]);
+        }    
 
-        if($model->BrnStatus == 'แจ้งซ่อม'){
-            $model->scenario = 'ricoh_serial';
-            if($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $model->save();
-                return $this->redirect(['index']);
-            }
-        }elseif($model->BrnStatus == 'SendMail' || $model->BrnStatus == 'ส่งของ'){
-            $model->scenario = 'ricoh_job';
-            if($model->load(Yii::$app->request->post()) && $model->validate()) {
-                $model->BrnStatus = 'ส่งของ';
-                $model->UserAcceptAt = date('Y-m-d H:i:s');
-                $model->save();
-                return $this->redirect(['index']);
-            }
-        }
-
-        return $this->renderAjax('update', [
-            'model' => $model,
-        ]);
     }
 
     public function actionUndelete($id)
@@ -168,4 +188,5 @@ class RicohController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
 }

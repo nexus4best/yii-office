@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'DeleteCause')->textInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'DeleteUser')->dropDownList(
+    <?= $form->field($model, 'DeleteByName')->dropDownList(
                             ["ราชศักดิ์" => "ราชศักดิ์","ณัฐวุฒิ" => "ณัฐวุฒิ","ชวัท" => "ชวัท","กิตติ" => "กิตติ","ธานี" => "ธานี"],
                             ['prompt'=>'']); ?>
 

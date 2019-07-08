@@ -1,3 +1,35 @@
+// recheck update 
+$('.recheckUpdate').click(function(){
+    $('#RecheckModal').modal('show')
+    .find('#RecheckModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
+// recive update รับของคลังสินค้า
+$('.reciveUpdate').click(function(){
+    $('#ReciveModal').modal('show')
+    .find('#ReciveModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
+// ricoh view
+$('.RicohView').click(function(){
+    $('#ricohViewModal').modal('show')
+    .find('#ricohViewModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
+// ricoh updateOpenjob
+$('.ricohOpenjob').click(function(){
+    $('#ricohModalOpenjob').modal('show')
+    .find('#ricohModalContentOpenJob')
+    .load($(this).attr('href'));
+    return false;
+});
+
 // ricoh update
 $('.ricohUpdate').click(function(){
     $('#ricohModal').modal('show')

@@ -10,7 +10,7 @@ class CntsRepairSearch extends CntsRepair
 {
     // t_branch
     public $branchBrnName;
-
+    
     // tbl_send
     public $sendCreatedAt;
     public $sendSendByName;
@@ -19,9 +19,9 @@ class CntsRepairSearch extends CntsRepair
     {
         return [
             [['id'], 'integer'],
-            [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause',
-                'branchBrnName', 'sendCreatedAt', 'sendSendByName', 
-                'BrnUserCreate', 'CreatedAt', 'UpdatedAt', 'UserAccept', 'UserAcceptAt'], 'safe'],
+            [['BrnStatus', 'BrnCode', 'BrnRepair', 'BrnPos', 'BrnBrand', 'BrnModel', 'BrnSerial', 'BrnCause', 
+                'branchBrnName', 'sendCreatedAt', 'sendSendByName',
+                'BrnCreateByName', 'CreatedAt', 'UpdatedAt', 'AcceptByName', 'AcceptAt'], 'safe'],
         ];
     }
 
@@ -33,12 +33,14 @@ class CntsRepairSearch extends CntsRepair
 
     public function search($params)
     {
-        $query = CntsRepair::find()
-                ->where(['IN','tbl_repair.BrnStatus',['แจ้งซ่อม','รับเรื่อง','ส่งของ','เรียบร้อย','ลบ'],])
-                ->andWhere(['IN','tbl_repair.BrnPos',['ADSL','CCTV'],])
-                ->andWhere("tbl_repair.BrnRepair<>'Laser Ricoh'");
-                //->orderBy(['tbl_repair.id'=>SORT_DESC]);
+        $query = TblRepair::find()
+                    ->where(['IN','tbl_repair.BrnStatus',['แจ้งซ่อม','รับเรื่อง','ส่งของ','เรียบร้อย','ลบ'],])
+                    ->andWhere(['IN','tbl_repair.BrnPos',['ADSL','CCTV'],])
+                    ->andWhere("tbl_repair.BrnRepair<>'Laser Ricoh'");
+                    //->orderBy(['tbl_repair.id'=>SORT_DESC]);
+
         $query->joinWith(['send','branch']);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -85,7 +87,7 @@ class CntsRepairSearch extends CntsRepair
             //'id' => $this->id,
             //'CreatedAt' => $this->CreatedAt,
             //'UpdatedAt' => $this->UpdatedAt,
-            //'UserAcceptAt' => $this->UserAcceptAt,
+            //'AcceptAt' => $this->AcceptAt,
         ]);
 
         $query->andFilterWhere(['like', 'tbl_repair.id', $this->id])
@@ -97,7 +99,7 @@ class CntsRepairSearch extends CntsRepair
             ->andFilterWhere(['like', 'tbl_repair.BrnRepair', $this->BrnRepair])
             ->andFilterWhere(['like', 'tbl_repair.BrnPos', $this->BrnPos])
             ->andFilterWhere(['like', 'tbl_repair.CreatedAt', $this->CreatedAt])
-            ->andFilterWhere(['like', 'tbl_repair.UserAccept', $this->UserAccept]);
+            ->andFilterWhere(['like', 'tbl_repair.AcceptByName', $this->AcceptByName]);
 
         return $dataProvider;
     }

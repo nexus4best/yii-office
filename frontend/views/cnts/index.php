@@ -9,7 +9,11 @@ use kartik\date\DatePicker;
 $this->title = 'It';
 ?>
 <div class="cnts-repair-index">
-
+    <div class="form-group">
+        <div class="row">
+            <?php Url::remember(); //echo Url::previous();?>
+        </div>
+    </div>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -120,7 +124,7 @@ $this->title = 'It';
             [
                 'label' => 'ผู้จัดส่ง',
                 'attribute' => 'sendSendByName',
-                'filter' => array("ไพบูลย์" => "ไพบูลย์","ศรันยู" => "ศรันยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"),
+                'filter' => array("ไพบูลย์" => "ไพบูลย์","ศรัณยู" => "ศรัณยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"),
                 'content' => function ($data) {
                     if(empty($data->getSendByName())){
                         return '';
@@ -133,7 +137,7 @@ $this->title = 'It';
             [
                 'label' => 'ผู้รับเรื่อง',
                 'attribute' => 'UserAccept',
-                'filter' => array("ไพบูลย์" => "ไพบูลย์","ศรันยู" => "ศรันยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"),
+                'filter' => array("ไพบูลย์" => "ไพบูลย์","ศรัณยู" => "ศรัณยู","วีระภา" => "วีระภา","เชิดศักดิ์" => "เชิดศักดิ์","กัลยา" => "กัลยา"),
                 'value' => function ($model) {
                     if(empty($model->UserAccept)){
                         return '';

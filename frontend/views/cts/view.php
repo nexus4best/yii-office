@@ -3,12 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model frontend\models\TblRepair */
-
 $this->title = $model->id;
-//$this->params['breadcrumbs'][] = ['label' => 'Tbl Repairs', 'url' => ['index']];
-//$this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
 <div class="tbl-repair-view">
