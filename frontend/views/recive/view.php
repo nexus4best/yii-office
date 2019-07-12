@@ -32,6 +32,12 @@ $this->title = $model->id;
                     .substr($model->CreatedAt,11,5).' '.$model->BrnCreateByName,
                     //.' <span style="color:blue;">'.Yii::$app->formatter->asRelativeTime($model->CreatedAt).'</span>',
             ],
+            'ReciveAt',
+            'RepairAt',
+            'RepairStatus',
+            'RepairReport',
+            'RepairByName',
+
         ],
     ]) ?>
 

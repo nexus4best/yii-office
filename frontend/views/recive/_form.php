@@ -28,12 +28,12 @@ use yii\widgets\ActiveForm;
             <div class="col-md-6" align="right"><?= $model->BrnCode.' '.$model->branch->BrnName ?></div>
         </div>    
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
             <?php
                 echo '<span style="background:yellow">'.$model->BrnRepair.'</span> เครื่อง '.$model->BrnPos
             ?>    
             </div>
-            <div class="col-md-6" align="right">
+            <div class="col-md-4" align="right">
                 <?php 
                     echo 'แจ้งซ่อม '.substr($model->CreatedAt,8,2).'/'.substr($model->CreatedAt,5,2).'/'.substr($model->CreatedAt,2,2).' '.substr($model->CreatedAt,11,5);  
                 ?>

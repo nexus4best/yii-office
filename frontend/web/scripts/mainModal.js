@@ -1,3 +1,11 @@
+// save to navision
+$('.sendNavision').click(function(){
+    $('#sendModal').modal('show')
+    .find('#sendModalContent')
+    .load($(this).attr('href'));
+    return false;
+});
+
 // recheck update 
 $('.recheckUpdate').click(function(){
     $('#RecheckModal').modal('show')

@@ -99,4 +99,17 @@ class TblSend extends \yii\db\ActiveRecord
         
     }
 
+    public function getRepair()
+    {
+        return $this->hasOne(TblRepair::className(), ['id' => 'id']);
+    }
+
+    // get Data from Reletion
+    public function getBrnCode()
+    {
+        $model=$this->repair;
+        return $model?$model->BrnCode:'';
+    }
+
+
 }

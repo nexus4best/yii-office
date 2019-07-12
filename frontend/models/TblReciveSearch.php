@@ -66,6 +66,7 @@ class TblReciveSearch extends TblRecive
             ->andFilterWhere(['like', 'branch.BrnName', $this->branchBrnName])
             ->andFilterWhere(['like', 'tbl_repair.BrnRepair', $this->BrnRepair])
             ->andFilterWhere(['like', 'tbl_repair.BrnPos', $this->BrnPos])
+            ->andFilterWhere(['like', 'tbl_repair.id', $this->id])
             ->andFilterWhere(['like', 'BrnBrand', $this->BrnBrand])
             ->andFilterWhere(['like', 'BrnModel', $this->BrnModel])
             ->andFilterWhere(['like', 'tbl_repair.BrnSerial', $this->BrnSerial])

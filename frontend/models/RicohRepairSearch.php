@@ -41,6 +41,7 @@ class RicohRepairSearch extends RicohRepair
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => array('pageSize'=> 10),
             'sort' => false,
         ]);
 

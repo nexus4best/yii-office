@@ -49,29 +49,22 @@ class TblRecheckSearch extends TblRecheck
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'AcceptAt' => $this->AcceptAt,
-            'ReciveAt' => $this->ReciveAt,
-            'RepairAt' => $this->RepairAt,
-            'CreatedAt' => $this->CreatedAt,
-            'UpdatedAt' => $this->UpdatedAt,
+            // 'id' => $this->id,
+            // 'AcceptAt' => $this->AcceptAt,
+            // 'ReciveAt' => $this->ReciveAt,
+            // 'RepairAt' => $this->RepairAt,
+            // 'CreatedAt' => $this->CreatedAt,
+            // 'UpdatedAt' => $this->UpdatedAt,
         ]);
 
-        $query->andFilterWhere(['like', 'BrnStatus', $this->BrnStatus])
+        $query->andFilterWhere(['like', 'id', $this->id])
             ->andFilterWhere(['like', 'BrnCode', $this->BrnCode])
             ->andFilterWhere(['like', 'BrnRepair', $this->BrnRepair])
             ->andFilterWhere(['like', 'BrnPos', $this->BrnPos])
-            ->andFilterWhere(['like', 'BrnBrand', $this->BrnBrand])
-            ->andFilterWhere(['like', 'BrnModel', $this->BrnModel])
             ->andFilterWhere(['like', 'BrnSerial', $this->BrnSerial])
-            ->andFilterWhere(['like', 'BrnCause', $this->BrnCause])
-            ->andFilterWhere(['like', 'BrnCreateByName', $this->BrnCreateByName])
-            ->andFilterWhere(['like', 'AcceptByName', $this->AcceptByName])
-            ->andFilterWhere(['like', 'DeleteByName', $this->DeleteByName])
-            ->andFilterWhere(['like', 'DeleteCause', $this->DeleteCause])
-            ->andFilterWhere(['like', 'DeleteIP', $this->DeleteIP])
+            ->andFilterWhere(['like', 'RepairAt', $this->RepairAt])
+            ->andFilterWhere(['like', 'ReciveAt', $this->ReciveAt])
             ->andFilterWhere(['like', 'RepairStatus', $this->RepairStatus])
-            ->andFilterWhere(['like', 'RepairReport', $this->RepairReport])
             ->andFilterWhere(['like', 'RepairByName', $this->RepairByName]);
 
         return $dataProvider;

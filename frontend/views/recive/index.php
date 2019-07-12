@@ -6,7 +6,7 @@ use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use kartik\date\DatePicker;
 
-$this->title = 'Tbl Recives';
+$this->title = 'รับของซ่อมสาขา';
 //$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tbl-recive-index">
@@ -15,25 +15,13 @@ $this->title = 'Tbl Recives';
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'headerOptions' => ['width' => '50'],
+            ],
             [
                 'attribute' => 'id',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    if(strlen($model->id) == 1){
-                        $new_id = '00000';
-                    }elseif(strlen($model->id) == 2){
-                        $new_id = '0000';
-                    }elseif(strlen($model->id) == 3){
-                        $new_id = '000';
-                    }elseif(strlen($model->id) == 4){
-                        $new_id = '00';
-                    }elseif(strlen($model->id) == 5){
-                        $new_id = '0';
-                    }
-                    return 'CTS-'.substr($model->CreatedAt,2,2).'-'.substr($model->CreatedAt,5,2).'-'.$new_id.$model->id;
-                },
-                //'headerOptions' => ['width' => '125'],
+                'headerOptions' => ['width' => '120'],
             ],
             'BrnRepair',
             'BrnSerial',
@@ -64,7 +52,7 @@ $this->title = 'Tbl Recives';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'รับของ',
@@ -88,7 +76,7 @@ $this->title = 'Tbl Recives';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'วันที่ซ่อม',
@@ -112,7 +100,7 @@ $this->title = 'Tbl Recives';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'สถานะซ่อม',
@@ -125,7 +113,7 @@ $this->title = 'Tbl Recives';
                         return $model->RepairStatus;
                     }
                 },
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'ซ่อมโดย',
@@ -138,12 +126,12 @@ $this->title = 'Tbl Recives';
                         return $model->RepairByName;
                     }
                 },
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '',
-                'template' => ' {update} ',
+                'template' => ' {update} {view}',
                 'buttons' => [
                     'view' => function($url,$model){
                         return Html::a(

@@ -6,7 +6,7 @@ use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use kartik\date\DatePicker;
 
-$this->title = 'It';
+$this->title = 'แจ้งซ่อม IT';
 ?>
 <div class="cnts-repair-index">
     <div class="form-group">

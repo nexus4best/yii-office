@@ -15,36 +15,23 @@ $this->title = 'Tbl Rechecks';
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'headerOptions' => ['width' => '50'],
+            ],
             [
                 'attribute' => 'id',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    if(strlen($model->id) == 1){
-                        $new_id = '00000';
-                    }elseif(strlen($model->id) == 2){
-                        $new_id = '0000';
-                    }elseif(strlen($model->id) == 3){
-                        $new_id = '000';
-                    }elseif(strlen($model->id) == 4){
-                        $new_id = '00';
-                    }elseif(strlen($model->id) == 5){
-                        $new_id = '0';
-                    }
-                    return 'CTS-'.substr($model->CreatedAt,2,2).'-'.substr($model->CreatedAt,5,2).'-'.$new_id.$model->id;
-                },
-                //'headerOptions' => ['width' => '125'],
+                'headerOptions' => ['width' => '120'],
             ],
             'BrnRepair',
             'BrnSerial',
             'BrnPos',
             'BrnCode',
-            [
-                'label' => 'ชื่อสาขา',
-                'attribute' => 'branchBrnName',
-                'value' => 'branch.BrnName',
-            ],
+            // [
+            //     'label' => 'ชื่อสาขา',
+            //     'attribute' => 'branchBrnName',
+            //     'value' => 'branch.BrnName',
+            // ],
             [
                 'label' => 'แจ้งซ่อม',
                 'attribute' => 'CreatedAt',
@@ -65,7 +52,7 @@ $this->title = 'Tbl Rechecks';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'รับของ',
@@ -89,7 +76,7 @@ $this->title = 'Tbl Rechecks';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'วันที่ซ่อม',
@@ -113,7 +100,7 @@ $this->title = 'Tbl Rechecks';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'สถานะซ่อม',
@@ -139,7 +126,7 @@ $this->title = 'Tbl Rechecks';
                         return $model->RepairByName;
                     }
                 },
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
 
             [

@@ -6,9 +6,12 @@ use kartik\date\DatePicker;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
 
-$this->title = 'Ricoh';
+$this->title = 'แจ้งซ่อม Ricoh';
 ?>
+
 <div class="ricoh-repair-index">
+
+
 <div class="form-group">
     <?php Pjax::begin(); ?>
     <?= Html::a("SendMail", ['ricoh/sendmail'], ['class' => 'btn btn-primary']) ?>
@@ -25,7 +28,10 @@ $this->title = 'Ricoh';
         'filterModel' => $searchModel,
         'summary'=>'',
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'headerOptions' => ['width' => '50'],
+            ],
             [
                 'label' => 'สถานะ',
                 'attribute' => 'BrnStatus',
@@ -45,19 +51,19 @@ $this->title = 'Ricoh';
                     }
                     return $brn_status;
                 },
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'id',
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'BrnSerial',
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'BrnCode',
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'label' => 'วันที่แจ้งซ่อม',
@@ -79,7 +85,7 @@ $this->title = 'Ricoh';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '150'],
+                'headerOptions' => ['width' => '150'],
             ],
             [
                 'label' => 'วันที่รับเรื่อง',
@@ -103,21 +109,25 @@ $this->title = 'Ricoh';
                             'format' => 'yyyy-mm-dd',
                         ]
                 ]),
-                //'headerOptions' => ['width' => '150'],
+                'headerOptions' => ['width' => '150'],
             ],
             [
                 'label' => 'job',
                 'attribute' => 'OpenJob',
                 'value' => 'ricoh.OpenJob',
-                //'headerOptions' => ['width' => '120'],
+                'headerOptions' => ['width' => '120'],
             ],
             [
                 'attribute' => 'BrnCause',
-                //'headerOptions' => ['width' => '150'],
+                'value' => function ($model) {
+                    return substr($model->BrnCause,0,200);
+                },
+                //'headerOptions' => ['width' => '320'],
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '',
+                'headerOptions' => ['width' => '80'],
                 'template' => '{view} {update} {delete} {openjob}',
                 'buttons' => [
                     'view' => function($url,$model){

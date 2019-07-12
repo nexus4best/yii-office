@@ -1,7 +1,9 @@
 <?php
 use yii\web\Session;
+
 $session = Yii::$app->session;
 $data_email = $session->get('data_email');
+
 foreach ($data_email as $key => $value) {
 
     if($value->zone->CtsId == 5){
@@ -18,7 +20,9 @@ foreach ($data_email as $key => $value) {
 
     echo '<b>'.$value->BrnSerial.' </b> '.$cts.' '.$value->BrnCause.' '.$value->BrnCode.' '.$value->branch->BrnName.'<br>';
 }
+
 $session->remove('data_email');
 ?>
+
 <br><br><br>
 ขอบคุณครับ

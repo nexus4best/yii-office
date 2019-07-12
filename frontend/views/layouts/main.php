@@ -40,8 +40,14 @@ AppAsset::register($this);
         ['label' => 'แผนก CTS', 'url' => ['/cts/index']],
         ['label' => 'Ricoh', 'url' => ['/ricoh/index']],
         ['label' => 'แผนก IT', 'url' => ['/cnts/index']],
-        ['label' => 'รับของจากคลังสินค้า', 'url' => ['/recive/index']],
+        ['label' => 'รับของซ่อมสาขา', 'url' => ['/recive/index']],
         ['label' => 'ตรวจซ่อมจากช่าง', 'url' => ['/recheck/index']],
+        ['label' => 'รายการส่งของ', 'url' => ['/send/index']],
+        ['label' => 'รายงาน', 'items' => [
+                        ['label' => 'ค้นหา ประวัติการใช้งาน', 'url'=>['/find/index'],'visible'=> !Yii::$app->user->isGuest],
+                        ['label' => 'ค้นหา รับของจากสาขา', 'url'=>['/find/recive'],'visible'=> !Yii::$app->user->isGuest],
+                    ]
+        ],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];

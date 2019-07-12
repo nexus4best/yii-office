@@ -66,7 +66,7 @@ class TblRecive extends \yii\db\ActiveRecord
         return [
             'id' => 'เลขที่',
             'BrnStatus' => 'สถานะ',
-            'BrnCode' => 'รหัสสาขา',
+            'BrnCode' => 'สาขา',
             'BrnRepair' => 'รายการ',
             'BrnPos' => 'เครื่อง',
             'BrnBrand' => 'ยี่ห้อ',
@@ -80,10 +80,10 @@ class TblRecive extends \yii\db\ActiveRecord
             'DeleteCause' => 'Delete Cause',
             'DeleteIP' => 'Delete Ip',
             'ReciveAt' => 'วันที่รับของ',
-            'RepairAt' => 'Repair At',
+            'RepairAt' => 'วันที่ซ่อม',
             'RepairStatus' => 'สถานะซ่อม',
             'RepairReport' => 'สรุปการซ่อม',
-            'RepairByName' => 'Repair By Name',
+            'RepairByName' => 'ซ่อมโดย',
             'CreatedAt' => 'Created At',
             'UpdatedAt' => 'Updated At',
         ];
