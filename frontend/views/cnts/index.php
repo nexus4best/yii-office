@@ -17,6 +17,7 @@ $this->title = 'แจ้งซ่อม IT';
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'summary'=>'',
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [

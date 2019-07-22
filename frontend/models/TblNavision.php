@@ -45,11 +45,11 @@ class TblNavision extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => 'รหัส',
             'SendBrand' => 'ยี่ห้อ',
             'SendModel' => 'รุ่น',
             'SendSerial' => 'หมายเลข',
-            'SendByName' => 'Send By Name',
+            'SendByName' => 'ผู้จัดส่ง',
             'SendFrom' => 'Send From',
             'SendNumber' => 'Send Number',
             'SendIP' => 'Send Ip',

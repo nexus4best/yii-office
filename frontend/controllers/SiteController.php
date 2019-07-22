@@ -90,7 +90,8 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            //return $this->goBack();
+            return $this->redirect(array('cts/index'));
         } else {
             $model->password = '';
 
@@ -108,8 +109,8 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        return $this->redirect(array('site/login'));
+        //return $this->goHome();
     }
 
     /**

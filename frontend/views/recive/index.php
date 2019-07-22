@@ -14,6 +14,7 @@ $this->title = 'รับของซ่อมสาขา';
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'summary'=>'',
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
@@ -131,7 +132,7 @@ $this->title = 'รับของซ่อมสาขา';
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '',
-                'template' => ' {update} {view}',
+                'template' => ' {update} ',
                 'buttons' => [
                     'view' => function($url,$model){
                         return Html::a(

@@ -10,13 +10,14 @@ class TblNavisionSearch extends TblNavision
 {
     public $BrnCode;
     public $BrnPos;
+    public $BrnRepair;
 
     public function rules()
     {
         return [
             [['id'], 'integer'],
             [['SendBrand', 'SendModel', 'SendSerial', 'SendByName', 'SendFrom', 'SendNumber', 'SendIP', 'SendNavision', 
-                'BrnCode','BrnPos',
+                'BrnCode','BrnPos', 'BrnRepair',
             'SendNavisionAt', 'CreatedAt', 'UpdatedAt'], 'safe'],
         ];
     }
@@ -36,6 +37,7 @@ class TblNavisionSearch extends TblNavision
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => false,
         ]);
 
         $this->load($params);
@@ -61,6 +63,7 @@ class TblNavisionSearch extends TblNavision
             ->andFilterWhere(['like', 'tbl_send.SendSerial', $this->SendSerial])
             ->andFilterWhere(['like', 'tbl_repair.BrnCode', $this->BrnCode])
             ->andFilterWhere(['like', 'tbl_repair.BrnPos', $this->BrnPos])
+            ->andFilterWhere(['like', 'tbl_repair.BrnRepair', $this->BrnRepair])
             ->andFilterWhere(['like', 'tbl_send.SendByName', $this->SendByName])
             ->andFilterWhere(['like', 'tbl_send.CreatedAt', $this->CreatedAt])
             ->andFilterWhere(['like', 'tbl_send.SendNavision', $this->SendNavision]);

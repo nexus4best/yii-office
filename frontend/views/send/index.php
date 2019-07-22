@@ -14,6 +14,7 @@ $this->title = 'รายการส่งของ';
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'summary'=>'',
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -37,7 +38,7 @@ $this->title = 'รายการส่งของ';
                 'headerOptions' => ['width' => '125'],
             ],
             [
-                'label' => 'Brn Code',
+                'label' => 'รหัส',
                 'attribute' => 'BrnCode',
                 'content' => function ($data) {
                     return $data->getBrnCode();
@@ -45,7 +46,7 @@ $this->title = 'รายการส่งของ';
                 'headerOptions' => ['width' => '100'],
             ],
             [
-                'label' => 'Brn Pos',
+                'label' => 'เครื่อง',
                 'attribute' => 'BrnPos',
                 'content' => function ($data) {
                     return $data->getBrnPos();
@@ -53,7 +54,7 @@ $this->title = 'รายการส่งของ';
                 'headerOptions' => ['width' => '100'],
             ],
             [
-                'label' => 'Brn Repair',
+                'label' => 'รายการ',
                 'attribute' => 'BrnRepair',
                 'content' => function ($data) {
                     return $data->getBrnREpair();

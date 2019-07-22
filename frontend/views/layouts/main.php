@@ -29,14 +29,13 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'แจ้งซ่อมสาขา',//Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'แผนก CTS', 'url' => ['/cts/index']],
         ['label' => 'Ricoh', 'url' => ['/ricoh/index']],
         ['label' => 'แผนก IT', 'url' => ['/cnts/index']],
