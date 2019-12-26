@@ -72,7 +72,7 @@ class RicohController extends Controller
     {
         $data_email = RicohRepair::find()
             ->joinWith('zone')
-            ->where('BrnRepair = "Laser RiCOH"')
+            ->where('BrnRepair = "เครื่องพิมพ์เอกสาร-RICOH"')
             ->andWhere('BrnStatus = "แจ้งซ่อม"')
             ->joinWith('branch')->all();
 
@@ -94,7 +94,7 @@ class RicohController extends Controller
             /* update ricoh all status SendMail */
             $update_date = date('Y-m-d H:i:s');
 
-            Yii::$app->db->createCommand("UPDATE tbl_repair SET BrnStatus='SendMail' , AcceptAt ='$update_date' WHERE BrnRepair='Laser RICOH' AND BrnStatus='แจ้งซ่อม'")->execute();
+            Yii::$app->db->createCommand("UPDATE tbl_repair SET BrnStatus='SendMail' , AcceptAt ='$update_date' WHERE BrnRepair='เครื่องพิมพ์เอกสาร-RICOH' AND BrnStatus='แจ้งซ่อม'")->execute();
 
             $response = Yii::$app->session->setFlash('success', 'ส่ง Email เรียบร้อย');
 

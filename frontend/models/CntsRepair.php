@@ -6,24 +6,6 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
-/**
- * This is the model class for table "tbl_repair".
- *
- * @property int $id
- * @property string $BrnStatus
- * @property string $BrnCode
- * @property string $BrnRepair
- * @property string $BrnPos
- * @property string $BrnBrand
- * @property string $BrnModel
- * @property string $BrnSerial
- * @property string $BrnCause
- * @property string $BrnUserCreate
- * @property string $CreatedAt
- * @property string $UpdatedAt
- * @property string $UserAccept
- * @property string $UserAcceptAt
- */
 class CntsRepair extends \yii\db\ActiveRecord
 {
     public function behaviors()
