@@ -33,7 +33,7 @@ class RicohRepairSearch extends RicohRepair
         $query = RicohRepair::find()
                 //->where(['IN','tbl_repair.BrnStatus',['แจ้งซ่อม','รับเรื่อง','ส่งของ','เรียบร้อย','ลบ'],])
                 //->andWhere(['NOT IN','tbl_repair.BrnPos',['ADSL','CCTV'],])
-                ->andWhere("tbl_repair.BrnRepair='Laser Ricoh'")
+                ->andWhere("tbl_repair.BrnRepair='เครื่องพิมพ์เอกสาร-RICOH'")
                 ->orderBy(['tbl_repair.id'=>SORT_DESC]);
 
         $query->joinWith(['ricoh']);

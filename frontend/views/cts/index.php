@@ -63,7 +63,7 @@ $this->title = 'แจ้งซ่อม CTS';
             'BrnRepair',
             [
                 'attribute' => 'BrnPos',
-                'filter' => array("C01" => "C01","C02" => "C02","C03" => "C03","C04" => "C04","C05" => "C05","C09" => "C09"),
+                'filter' => array("C01" => "C01","C02" => "C02","C03" => "C03","C04" => "C04","C05" => "C05","BackOffice" => "C09"),
                 'headerOptions' => ['width' => '100'],
             ],
             [

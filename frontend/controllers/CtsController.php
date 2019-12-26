@@ -90,7 +90,7 @@ class CtsController extends Controller
             $new_send->SendIP = Yii::$app->getRequest()->getUserIP();
             $new_send->save();
             
-            Yii::$app->session->setFlash('success', 'ส่งของแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            //Yii::$app->session->setFlash('success', 'ส่งของแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
             return $this->redirect([Yii::$app->session->get('__returnUrl')]);
             //return $this->redirect(array('index'));
 
@@ -118,7 +118,7 @@ class CtsController extends Controller
             
             $model->save();
             
-            Yii::$app->session->setFlash('info', 'รับเรื่องแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            //Yii::$app->session->setFlash('info', 'รับเรื่องแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
             return $this->redirect([Yii::$app->session->get('__returnUrl')]);
             //return $this->redirect(array('index'));
 
@@ -146,7 +146,7 @@ class CtsController extends Controller
             
             $model->save();
             
-            Yii::$app->session->setFlash('danger', 'ลบแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
+            //Yii::$app->session->setFlash('danger', 'ลบแจ้งซ่อม '.'<b>'.$model->BrnRepair.' </b>เลขที่<b> '.$model->id.' </b>เรียบร้อย');
             return $this->redirect([Yii::$app->session->get('__returnUrl')]);
             //return $this->redirect(array('index'));
 

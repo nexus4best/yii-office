@@ -72,9 +72,9 @@ class RicohRepair extends \yii\db\ActiveRecord
         return $this->hasOne(TblComment::className(), ['id' => 'id']);
     }
     
-    public function getZone()
-    {
-        return $this->hasOne(TblZone::className(), ['BrnCode' => 'BrnCode']);
-    }
+    // public function getZone()
+    // {
+    //     return $this->hasOne(TblZone::className(), ['BrnCode' => 'BrnCode']);
+    // }
 
 }
